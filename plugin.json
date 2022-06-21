@@ -3,5 +3,5 @@
     "author": "hulkrelax",
     "main_view_html": "index.html",
     "tile_view_html": "",
-    "flags": ["_hot_reload", "_root"]
+    "flags": []
 }
