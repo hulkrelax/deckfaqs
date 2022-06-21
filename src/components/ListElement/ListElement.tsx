@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react'
 
 // a bit hacky with the optional url
 type GameElementProps = {
-    text: string;
-    url?: string | undefined;
-    handleOnClick: (text: string) => void;
+    text: string
+    url?: string | undefined
+    handleOnClick: (text: string) => void
 }
 
-export const ListElement = ({text,url,handleOnClick}: GameElementProps) => {
+export const ListElement = ({ text, url, handleOnClick }: GameElementProps) => {
     const handleClick = () => {
-        handleOnClick(url ?? text);
-    };
+        handleOnClick(url ?? text)
+    }
 
     return (
         <li>
