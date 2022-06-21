@@ -7,7 +7,7 @@ non_steam = "/home/deck/.steam/steam/userdata"
 library_regex = re.compile('"path"\t+"(.*)"')
 game_regex = re.compile('"name"\t+"(.*)"')
 app_id_regex = re.compile('"appid"\t+"(.*)"')
-non_steam_regex = re.compile("(appname)\x00(.*?)\x00\x01(?:exe)")
+non_steam_regex = re.compile("(appname)\x00(.*?)\x00\x01(?:exe)", re.IGNORECASE)
 
 ignore_apps = ["1887720", "1070560", "1391110", "228980"]
 ignore_non_steam = [
