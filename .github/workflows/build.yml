@@ -39,6 +39,7 @@ jobs:
           path: |
             ./dist/*
   release:
+    needs: build
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
