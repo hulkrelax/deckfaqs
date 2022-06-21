@@ -52,8 +52,8 @@ jobs:
 
       - name: zip/tar release
         run: |
-          zip -rj deckfaqs.zip deckfaqs/*
-          tar -czvf deckfaqs.tar.gz -C deckfaqs .
+          zip -r deckfaqs.zip deckfaqs/*
+          tar -czvf deckfaqs.tar.gz deckfaqs
 
       - uses: ncipollo/release-action@v1
         with:
