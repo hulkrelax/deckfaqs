@@ -50,16 +50,13 @@ jobs:
           name: deckfaqs
           path: deckfaqs
 
-      - name: Set version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
       - name: zip/tar release
         run: |
-          zip -rj deckfaqs_$RELEASE_VERSION.zip deckfaqs/*
-          tar -czvf deckfaqs_$RELEASE_VERSION.tar.gz -C deckfaqs .
+          zip -rj deckfaqs.zip deckfaqs/*
+          tar -czvf deckfaqs.tar.gz -C deckfaqs .
 
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "deckfaqs_${{ env.RELEASE_VERSION }}.zip,deckfaqs_${{ env.RELEASE_VERSION }}.tar.gz"
+          artifacts: "deckfaqs.zip,deckfaqs.tar.gz"
           bodyFile: "release.md"
           token: ${{ secrets.GITHUB_TOKEN }}
