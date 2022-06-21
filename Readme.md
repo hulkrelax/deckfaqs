@@ -10,7 +10,7 @@ Built with the [Steam Deck Plugin Loader](https://github.com/SteamDeckHomebrew/P
     * Install with script<br>
     `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/install_plugin.sh | sh`
     * or Install manually<br>
-    `curl -LJO https://github.com/hulkrelax/deckfaqs/releases/download/v0.1.0/deckfaqs.tar.gz`<br>
+    `curl -LJO https://github.com/hulkrelax/deckfaqs/releases/download/v0.1.1/deckfaqs.tar.gz`<br>
     `sudo tar -xvf deckfaqs.tar.gz -C /home/deck/homebrew/plugins/`
     
 
