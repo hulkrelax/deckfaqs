@@ -48,14 +48,15 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: deckfaqs
+          path: deckfaqs
 
-      - name: zip/tar release
-        run: |
-          zip -rj deckfaqs.zip deckfaqs/*
-          tar -czvf deckfaqs.tar.gz -C deckfaqs .
+      # - name: zip/tar release
+      #   run: |
+      #     zip -rj deckfaqs.zip deckfaqs/*
+      #     tar -czvf deckfaqs.tar.gz -C deckfaqs .
 
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "deckfaqs.zip,deckfaqs.tar.gz"
+          artifacts: "deckfaqs"
           bodyFile: "release.md"
           token: ${{ secrets.GITHUB_TOKEN }}
