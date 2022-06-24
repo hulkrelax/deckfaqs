@@ -8,7 +8,7 @@ Built with the [Steam Deck Plugin Loader](https://github.com/SteamDeckHomebrew/P
 1. You need to install [Plugin Loader](https://github.com/SteamDeckHomebrew/PluginLoader#installation) first before getting started.
 2. Download/Install Steps
     * (**RECOMMENDED**) Install from PluginLoader directly. DeckFAQs is now on the PluginLoader browser. You can access it by tapping the shopping bag icon from Plugin Loader and looking for "deckfaqs_pluginbrowser". 
-        * **Note that if you previously installed DeckFAQs with one of the options below, you should first uninstall that by running `sudo rm -r /home/deck/plugins/deckfaqs` or `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/uninstall.sh | sh`**
+        * **Note that if you previously installed DeckFAQs with one of the options below, you should first uninstall that by running `sudo rm -r /home/deck/homebrew/plugins/deckfaqs` or `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/uninstall.sh | sh`**
     * Install with script<br>
     `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/install_plugin.sh | sh`
     * or Install manually<br>
