@@ -7,14 +7,13 @@ Built with the [Steam Deck Plugin Loader](https://github.com/SteamDeckHomebrew/P
 ## How to Install
 1. You need to install [Plugin Loader](https://github.com/SteamDeckHomebrew/PluginLoader#installation) first before getting started.
 2. Download/Install Steps
+    * (**RECOMMENDED**) Install from PluginLoader directly. DeckFAQs is now on the PluginLoader browser. You can access it by tapping the shopping bag icon from Plugin Loader and looking for "deckfaqs_pluginbrowser". 
+        * **Note that if you previously installed DeckFAQs with one of the options below, you should first uninstall that by running `sudo rm -r /home/deck/plugins/deckfaqs` or `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/uninstall.sh | sh`**
     * Install with script<br>
     `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/install_plugin.sh | sh`
     * or Install manually<br>
     `curl -LJO https://github.com/hulkrelax/deckfaqs/releases/download/v0.1.1/deckfaqs.tar.gz`<br>
     `sudo tar -xvf deckfaqs.tar.gz -C /home/deck/homebrew/plugins/`
-    
-
-For a future release, I will look into adding this to the Plugin Browser; however, I think the way my plugin is built is incompatible with the way the plugin browser downloads and installs plugins.
 
 ## Features
 DeckFAQs supports both rich-text and plain-text guides from GameFAQs. Rich-text guides are displayed in an iframe while plain-text guides are rendered directly in the side-panel
