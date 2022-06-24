@@ -61,15 +61,3 @@ jobs:
                   artifacts: 'deckfaqs.zip,deckfaqs.tar.gz'
                   bodyFile: 'release.md'
                   token: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Push directory to another repository
-              uses: cpina/github-action-push-to-another-repository@v1.4.2
-              env:
-                  API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-              with:
-                  source-directory: deckfaqs/
-                  destination-github-username: 'hulkrelax'
-                  destination-repository-name: 'deckfaqs_pluginbrowser'
-                  user-email: andrew@hulkrelax.xyz
-                  commit-message: See ORIGIN_COMMIT from $GITHUB_REF
-                  target-branch: main
