@@ -1,6 +1,6 @@
 {
     "name": "deckfaqs",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "GameFAQs browser for the Steam Deck",
     "scripts": {
         "build": "webpack --mode production"
