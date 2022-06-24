@@ -3,5 +3,10 @@
     "author": "hulkrelax",
     "main_view_html": "index.html",
     "tile_view_html": "",
-    "flags": []
+    "flags": [],
+    "publish": {
+        "discord_id": "488760856277155862",
+        "description": "A GameFAQs browser for the Steam Deck (both Steam and non-Steam Games)",
+        "tags": ["guides", "utility"]
+    }
 }

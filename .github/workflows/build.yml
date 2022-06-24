@@ -1,62 +1,75 @@
 name: Build and Release DeckFAQs
 
 on:
-  push:
-    tags:
-    - 'v*'
-  pull_request:
-    branches: [ "main" ]
+    push:
+        tags:
+            - 'v*'
+    pull_request:
+        branches: ['main']
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: '18.3'
+            - name: Setup Node
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '18.3'
 
-      - name: Install Dependencies
-        run: npm install
+            - name: Install Dependencies
+              run: npm install
 
-      - name: build
-        run: npm run build
+            - name: build
+              run: npm run build
 
-      - name: copy files into build
-        run: |
-          cp main.py ./dist/
-          cp plugin.json ./dist/
+            - name: copy files into build
+              run: |
+                  cp main.py ./dist/
+                  cp plugin.json ./dist/
 
-      - name: Upload package
-        uses: actions/upload-artifact@v2
-        with:
-          name: deckfaqs
-          path: |
-            ./dist/*
-  release:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+            - name: Upload package
+              uses: actions/upload-artifact@v2
+              with:
+                  name: deckfaqs
+                  path: |
+                      ./dist/*
+    release:
+        needs: build
+        if: startsWith(github.ref, 'refs/tags/v')
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
 
-      - uses: actions/download-artifact@v3
-        with:
-          name: deckfaqs
-          path: deckfaqs
+            - uses: actions/download-artifact@v3
+              with:
+                  name: deckfaqs
+                  path: deckfaqs
 
-      - name: zip/tar release
-        run: |
-          zip -r deckfaqs.zip deckfaqs/*
-          tar -czvf deckfaqs.tar.gz deckfaqs
+            - name: zip/tar release
+              run: |
+                  zip -r deckfaqs.zip deckfaqs/*
+                  tar -czvf deckfaqs.tar.gz deckfaqs
 
-      - uses: ncipollo/release-action@v1
-        with:
-          artifacts: "deckfaqs.zip,deckfaqs.tar.gz"
-          bodyFile: "release.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Create a release
+              uses: ncipollo/release-action@v1
+              with:
+                  artifacts: 'deckfaqs.zip,deckfaqs.tar.gz'
+                  bodyFile: 'release.md'
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Push directory to another repository
+              uses: cpina/github-action-push-to-another-repository@v1.4.2
+              env:
+                  SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+              with:
+                  source-directory: deckfaqs/*
+                  destination-github-username: 'hulkrelax'
+                  destination-repository-name: 'deckfaqs_pluginbrowser'
+                  user-email: andrew@hulkrelax.xyz
+                  commit-message: See ORIGIN_COMMIT from $GITHUB_REF
+                  target-branch: main
