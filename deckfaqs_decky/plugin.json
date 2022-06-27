@@ -1,7 +1,7 @@
 {
     "name": "DeckFAQs",
     "author": "hulkrelax",
-    "flags": [],
+    "flags": ["_hot_reload"],
     "publish": {
         "discord_id": "488760856277155862",
         "description": "A GameFAQs browser for the Steam Deck (both Steam and non-Steam Games)",

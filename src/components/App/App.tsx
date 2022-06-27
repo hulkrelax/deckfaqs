@@ -1,13 +1,8 @@
-declare function call_plugin_method(
-    methodName: string,
-    arguments: {}
-): Promise<any>
-declare function fetch_nocors(url: string, request: {}): Promise<any>
-
-import React, { useState, useEffect } from 'react'
-import styles from './App.module.css'
+import React, { useState, useEffect, useRef } from 'react'
 import { List, ListItem } from '../List/List'
 import { Guide } from '../Guide/Guide'
+import { DialogButton, ServerAPI } from 'decky-frontend-lib'
+import { FaHome } from 'react-icons/fa'
 
 type AppState = 'games' | 'results' | 'guides' | 'guide'
 
@@ -17,35 +12,46 @@ type SearchResult = {
     url: string | undefined
 }
 
-const userAgent =
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36'
-const headers = { 'User-Agent': userAgent }
-const faqsNightmareRegex =
-    /(\/faqs\/\d+)\">(.*?)<\/a>[\S\n\t ]*?(rec)?\">\n.*(v\.[^,]*).*title=\"(.*)\"/gm
+type AppProps = {
+    serverAPI: ServerAPI
+}
 
-export const App = () => {
+// This used to use css modules, but with the way the new React Based router works,
+// I have yet to figure out how to import css properly
+
+export const App = ({ serverAPI }: AppProps) => {
+    const userAgent =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36'
+    const headers = { 'User-Agent': userAgent }
+    const faqsNightmareRegex =
+        /(\/faqs\/\d+)\">(.*?)<\/a>[\S\n\t ]*?(rec)?\">\n.*(v\.[^,]*).*title=\"(.*)\"/gm
+
     const [appState, setAppState] = useState<AppState>('games')
     const [games, setGames] = useState<ListItem[]>([])
     const [searchResults, setSearchResults] = useState<ListItem[]>([])
     const [guides, setGuides] = useState<ListItem[]>([])
-    const [guideUrl, setGuideUrl] = useState<string>('')
+    const [guideUrl, setGuideUrl] = useState<string | undefined>(undefined)
     const [guideText, setGuideText] = useState<string | undefined>(undefined)
 
-    useEffect(() => {
-        call_plugin_method('get_games', {}).then((result) => {
-            setGames(
-                result.map((game: string) => {
-                    return { text: game }
-                })
-            )
-        })
-    }, [])
+    const mainDiv = useRef(null)
 
     useEffect(() => {
-        window.scrollTo({
-            top: 0,
-        })
-    }, [appState])
+        // the parent div sets the height to 100% which causes things to scroll too far
+        // this is a bit of a hack but it works for the most part
+        mainDiv.current.parentNode.style = 'overflow: hidden'
+        serverAPI
+            .callPluginMethod<{}, string[]>('get_games', {})
+            .then((response) => {
+                if (response.success) {
+                    const result = response.result
+                    setGames(
+                        result.map((game: string) => {
+                            return { text: game }
+                        })
+                    )
+                }
+            })
+    }, [])
 
     const back = () => {
         let newState: AppState
@@ -68,17 +74,20 @@ export const App = () => {
         setAppState('games')
     }
 
-    const getGuides = (url: string) => {
-        setGuides([])
-        fetch_nocors(`${url}/faqs`, { headers }).then((response) => {
-            let body: string = response.body
+    const getGuides = async (url: string) => {
+        const guides: ListItem[] = []
+        const response = await serverAPI.fetchNoCors<{ body: string }>(
+            `${url}/faqs`,
+            { headers }
+        )
+        if (response.success) {
+            let body = response.result.body
             const faqs = Array.from(body.matchAll(faqsNightmareRegex))
             // sort by recommended
             faqs.sort((a, _b) => {
                 if (a[3] == 'rec') return -1
                 return 1
             })
-            const guides: ListItem[] = []
             for (const faq of faqs) {
                 const faqUrl = faq[1],
                     title = faq[2],
@@ -89,20 +98,26 @@ export const App = () => {
                     text: `${title} - ${version} - ${date}`,
                 })
             }
+        } else {
+            console.error(response.result)
+        }
 
-            setGuides(guides)
-            setAppState('guides')
-        })
+        setGuides(guides)
+        setAppState('guides')
     }
 
-    const search = (game: string) => {
-        setSearchResults([])
+    const search = async (game: string) => {
         game = game.replace(' ', '+')
         const searchUrl = `https://gamefaqs.gamespot.com/ajax/home_game_search?term=${game}`
         const home = 'https://gamefaqs.gamespot.com'
-        fetch_nocors(searchUrl, { headers }).then((response) => {
-            const results: SearchResult[] = JSON.parse(response.body)
-            let searchResults: ListItem[] = []
+        const response = await serverAPI.fetchNoCors<{ body: string }>(
+            searchUrl,
+            { headers }
+        )
+        let searchResults: ListItem[] = []
+
+        if (response.success) {
+            const results: SearchResult[] = JSON.parse(response.result.body)
             results.forEach((result) => {
                 if (result.product_name) {
                     const url = `${home}/${result.url}`
@@ -112,26 +127,35 @@ export const App = () => {
                     })
                 }
             })
-            setSearchResults(searchResults)
-            setAppState('results')
-        })
+        } else {
+            console.error(response.result)
+        }
+        setSearchResults(searchResults)
+        setAppState('results')
     }
 
-    const openGuide = (url: string) => {
-        setGuideText(undefined)
-        setGuideUrl('')
-        fetch_nocors(url, { headers }).then((response) => {
-            const htmlBody: string = response.body
+    const openGuide = async (url: string) => {
+        let gText: string = undefined
+        let gUrl: string = undefined
+        const response = await serverAPI.fetchNoCors<{ body: string }>(url, {
+            headers,
+        })
+        if (response.success) {
+            const htmlBody: string = response.result.body
             if (htmlBody.includes('<div class="faqtext" id="faqtext">')) {
                 const parser = new DOMParser()
                 const faq = parser.parseFromString(htmlBody, 'text/html')
                 const faqText = faq.getElementById('faqtext')
-                setGuideText(faqText.innerText)
+                gText = faqText.innerText
             } else {
-                setGuideUrl(url)
+                gUrl = url
             }
-        })
-        setAppState('guide')
+            setGuideText(gText)
+            setGuideUrl(gUrl)
+            setAppState('guide')
+        } else {
+            console.error(response.result)
+        }
     }
 
     const Components = Object.freeze({
@@ -149,37 +173,55 @@ export const App = () => {
         guide: <Guide url={guideUrl} text={guideText} />,
     })
 
+    const navButtonStyle = {
+        height: '40px',
+        width: '50%',
+        minWidth: '0',
+        padding: '10px 12px',
+    }
+
+    // I'm sure there is a more elegant way to do this but I don't have time for that :smile:
+    const mainHeight =
+        appState == 'games' ? 'calc(100% - 28px)' : 'calc(100% - 88px)'
+
     return (
-        <>
-            <div>
-                <div
-                    className={`${styles.nav} ${
-                        appState === 'games' ? styles.hidden : ''
-                    }`}
-                >
-                    <button onClick={back} type="button" className={styles.btn}>
-                        Back
-                    </button>
-                    {appState !== 'games' && appState !== 'results' && (
-                        <button
-                            onClick={backToGames}
-                            type="button"
-                            className={styles.btn}
-                        >
-                            Back to Games
-                        </button>
-                    )}
-                </div>
-            </div>
+        <div ref={mainDiv} style={{ height: mainHeight, padding: '0 16px' }}>
             <div
-                className={`${
-                    appState === 'games' || appState === 'guide'
-                        ? ''
-                        : styles.pad
-                }`}
+                style={{
+                    display: appState == 'games' ? 'none' : 'flex',
+                    width: '100%',
+                    marginBottom: '10px',
+                }}
             >
-                {Components[appState]}
+                {appState !== 'games' && appState !== 'results' && (
+                    <DialogButton
+                        style={{ ...navButtonStyle, marginRight: '10px' }}
+                        onClick={backToGames}
+                    >
+                        <FaHome
+                            style={{ margin: '0 auto', display: 'block' }}
+                        />
+                    </DialogButton>
+                )}
+                <DialogButton style={navButtonStyle} onClick={back}>
+                    Back
+                </DialogButton>
             </div>
-        </>
+            {Components[appState]}
+        </div>
     )
 }
+
+/* <div>
+    <div style={styles.nav}>
+        <button style={styles.btn} onClick={back} type="button">
+            Back
+        </button>
+        {appState !== 'games' && appState !== 'results' && (
+            <button onClick={backToGames} type="button">
+                Back to Games
+            </button>
+        )}
+    </div>
+    </div>
+    <div style={styles.pad}>{Components[appState]}</div> */

@@ -1,32 +1,55 @@
-import React from 'react'
-import { ListElement } from '../ListElement/ListElement'
-import styles from './List.module.css'
+import { ButtonItem, PanelSectionRow } from 'decky-frontend-lib'
+import React, { useEffect, useRef } from 'react'
 
 export type ListItem = {
     text: string
     url?: string | undefined
 }
 
-interface ListProps {
+type ListProps = {
     header: string
     data: ListItem[]
     handleClick: (text: string) => void
 }
 
 export const List = ({ data, header, handleClick }: ListProps) => {
+    const listDiv = useRef(null)
+    useEffect(() => {
+        listDiv.current.scrollTo(0, 0)
+    }, [data])
     return (
-        <>
-            <h1>{header}</h1>
-            <ul className={styles.mylist}>
-                {data?.map((item) => (
-                    <ListElement
-                        key={item.text}
-                        text={item.text}
-                        url={item.url}
-                        handleOnClick={handleClick}
-                    />
+        <div style={{ height: '100%' }}>
+            <div
+                style={{
+                    fontSize: '16px',
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    display: 'inline-block',
+                    width: '100%',
+                }}
+            >
+                {header}
+            </div>
+            <div
+                ref={listDiv}
+                style={{
+                    height: '100%',
+                    overflowY: 'scroll',
+                    overflowX: 'hidden',
+                }}
+            >
+                {data?.map(({ text, url }) => (
+                    <PanelSectionRow>
+                        <ButtonItem
+                            key={text}
+                            layout="below"
+                            onClick={() => handleClick(url ?? text)}
+                        >
+                            {text}
+                        </ButtonItem>
+                    </PanelSectionRow>
                 ))}
-            </ul>
-        </>
+            </div>
+        </div>
     )
 }

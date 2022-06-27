@@ -1,16 +1,24 @@
 import React from 'react'
-import styles from './Guide.module.css'
 
 type GuideProps = {
-    url: string
+    url: string | undefined
     text: string | undefined
 }
 
-export const Guide = ({ url, text }: GuideProps) =>
-    text ? (
-        <div className={styles.plain}>
-            <pre>{text}</pre>
+const guideStyle = {
+    border: 'none',
+    overflow: 'hidden',
+    height: '100%',
+}
+
+export const Guide = ({ url, text }: GuideProps) => {
+    return text ? (
+        <div style={{ height: '100%', overflowY: 'scroll' }}>
+            <pre style={{ whiteSpace: 'pre-wrap' }}>{text}</pre>
         </div>
     ) : (
-        <iframe className={styles.guide} src={url} sandbox="" />
+        <div style={{ height: '400px' }}>
+            <iframe src={url} style={guideStyle} sandbox="" />
+        </div>
     )
+}
