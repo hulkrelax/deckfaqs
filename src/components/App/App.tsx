@@ -115,7 +115,6 @@ export const App = ({ serverAPI }: AppProps) => {
             { headers }
         )
         let searchResults: ListItem[] = []
-
         if (response.success) {
             const results: SearchResult[] = JSON.parse(response.result.body)
             results.forEach((result) => {
