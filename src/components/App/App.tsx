@@ -211,17 +211,3 @@ export const App = ({ serverAPI }: AppProps) => {
         </div>
     )
 }
-
-/* <div>
-    <div style={styles.nav}>
-        <button style={styles.btn} onClick={back} type="button">
-            Back
-        </button>
-        {appState !== 'games' && appState !== 'results' && (
-            <button onClick={backToGames} type="button">
-                Back to Games
-            </button>
-        )}
-    </div>
-    </div>
-    <div style={styles.pad}>{Components[appState]}</div> */
