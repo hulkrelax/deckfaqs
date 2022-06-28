@@ -26,6 +26,23 @@ export const App = ({ serverAPI }: AppProps) => {
     const faqsNightmareRegex =
         /(\/faqs\/\d+)\">(.*?)<\/a>[\S\n\t ]*?(rec)?\">\n.*(v\.[^,]*).*title=\"(.*)\"/gm
 
+    const ignoreSteam = [1887720, 1070560, 1391110, 228980]
+    const ignoreNonSteam = [
+        'EmulationStation-DE-x64_SteamDeck',
+        'Google Chrome',
+        'Cemu',
+        'Citra',
+        'Dolphin (emulator)',
+        'DuckStation (Emulator)',
+        'PCSX2',
+        'PPSSPP',
+        'PrimeHack',
+        'RetroArch',
+        'RPCS3',
+        'xemu (emulator)',
+        'Yuzu',
+    ]
+
     const [appState, setAppState] = useState<AppState>('games')
     const [games, setGames] = useState<ListItem[]>([])
     const [searchResults, setSearchResults] = useState<ListItem[]>([])
@@ -39,18 +56,40 @@ export const App = ({ serverAPI }: AppProps) => {
         // the parent div sets the height to 100% which causes things to scroll too far
         // this is a bit of a hack but it works for the most part
         mainDiv.current.parentNode.style = 'overflow: hidden'
-        serverAPI
-            .callPluginMethod<{}, string[]>('get_games', {})
-            .then((response) => {
-                if (response.success) {
-                    const result = response.result
-                    setGames(
-                        result.map((game: string) => {
-                            return { text: game }
+
+        const getGames = async (): Promise<ListItem[]> => {
+            // Steam Games
+            const installFolders =
+                await SteamClient.InstallFolder.GetInstallFolders()
+            const games: { appName: string; sortAsName: string }[] = []
+            installFolders.forEach((folder) => {
+                folder.vecApps.forEach((app) => {
+                    if (!ignoreSteam.includes(app.nAppID)) {
+                        games.push({
+                            sortAsName: app.strSortAs,
+                            appName: app.strAppName,
                         })
-                    )
+                    }
+                })
+            })
+
+            // Non-Steam Games
+            const shortcuts = await SteamClient.Apps.GetAllShortcuts()
+            shortcuts.forEach(({ data: { strSortAs, strAppName } }) => {
+                if (!ignoreNonSteam.includes(strAppName)) {
+                    games.push({ sortAsName: strSortAs, appName: strAppName })
                 }
             })
+            return games
+                .sort((a, b) => a.sortAsName.localeCompare(b.sortAsName))
+                .map(({ appName }): ListItem => {
+                    return { text: appName }
+                })
+        }
+
+        getGames().then((games) => {
+            setGames(games)
+        })
     }, [])
 
     const back = () => {
