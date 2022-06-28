@@ -3,8 +3,9 @@ import { List, ListItem } from '../List/List'
 import { Guide } from '../Guide/Guide'
 import { DialogButton, ServerAPI } from 'decky-frontend-lib'
 import { FaHome } from 'react-icons/fa'
+import { GameList } from '../List/GameList'
 
-type AppState = 'games' | 'results' | 'guides' | 'guide'
+type PluginState = 'games' | 'results' | 'guides' | 'guide'
 
 type SearchResult = {
     product_name: string | undefined
@@ -43,8 +44,11 @@ export const App = ({ serverAPI }: AppProps) => {
         'Yuzu',
     ]
 
-    const [appState, setAppState] = useState<AppState>('games')
+    const [appState, setAppState] = useState<PluginState>('games')
     const [games, setGames] = useState<ListItem[]>([])
+    const [runningGame, setRunningGame] = useState<string | undefined>(
+        undefined
+    )
     const [searchResults, setSearchResults] = useState<ListItem[]>([])
     const [guides, setGuides] = useState<ListItem[]>([])
     const [guideUrl, setGuideUrl] = useState<string | undefined>(undefined)
@@ -52,19 +56,41 @@ export const App = ({ serverAPI }: AppProps) => {
 
     const mainDiv = useRef(null)
 
+    const handleAppStateChange = ({ unAppID, bRunning }: AppState) => {
+        let newRunningGame: string = undefined
+        if (bRunning) {
+            let gameInfo: AppOverview = appStore.GetAppOverviewByAppID(unAppID)
+            if (gameInfo) {
+                newRunningGame = gameInfo.display_name
+            }
+        }
+        setRunningGame(newRunningGame)
+    }
+
     useEffect(() => {
         // the parent div sets the height to 100% which causes things to scroll too far
         // this is a bit of a hack but it works for the most part
         mainDiv.current.parentNode.style = 'overflow: hidden'
 
-        const getGames = async (): Promise<ListItem[]> => {
+        const getGames = async (): Promise<{
+            games: ListItem[]
+            runningGame: string
+        }> => {
             // Steam Games
             const installFolders =
                 await SteamClient.InstallFolder.GetInstallFolders()
             const games: { appName: string; sortAsName: string }[] = []
+            let currentRunningGame: string = undefined
             installFolders.forEach((folder) => {
                 folder.vecApps.forEach((app) => {
                     if (!ignoreSteam.includes(app.nAppID)) {
+                        if (
+                            !currentRunningGame &&
+                            appStore.GetAppOverviewByAppID(app.nAppID)
+                                ?.display_status === DisplayStatus.Running
+                        ) {
+                            currentRunningGame = app.strAppName
+                        }
                         games.push({
                             sortAsName: app.strSortAs,
                             appName: app.strAppName,
@@ -80,20 +106,33 @@ export const App = ({ serverAPI }: AppProps) => {
                     games.push({ sortAsName: strSortAs, appName: strAppName })
                 }
             })
-            return games
-                .sort((a, b) => a.sortAsName.localeCompare(b.sortAsName))
-                .map(({ appName }): ListItem => {
-                    return { text: appName }
-                })
+            return {
+                games: games
+                    .sort((a, b) => a.sortAsName.localeCompare(b.sortAsName))
+                    .map(({ appName }): ListItem => {
+                        return { text: appName }
+                    }),
+                runningGame: currentRunningGame,
+            }
         }
 
-        getGames().then((games) => {
+        getGames().then(({ games, runningGame }) => {
             setGames(games)
+            setRunningGame(runningGame)
         })
+
+        const onAppStateChange =
+            SteamClient.GameSessions.RegisterForAppLifetimeNotifications(
+                handleAppStateChange
+            )
+
+        return function cleanup() {
+            onAppStateChange.unregister()
+        }
     }, [])
 
     const back = () => {
-        let newState: AppState
+        let newState: PluginState
         switch (appState) {
             case 'guides':
                 newState = 'results'
@@ -198,7 +237,12 @@ export const App = ({ serverAPI }: AppProps) => {
 
     const Components = Object.freeze({
         games: (
-            <List header="Installed Games" data={games} handleClick={search} />
+            <GameList
+                header="Installed Games"
+                data={games}
+                handleClick={search}
+                runningGame={runningGame}
+            />
         ),
         results: (
             <List
@@ -219,8 +263,11 @@ export const App = ({ serverAPI }: AppProps) => {
     }
 
     // I'm sure there is a more elegant way to do this but I don't have time for that :smile:
-    const mainHeight =
-        appState == 'games' ? 'calc(100% - 28px)' : 'calc(100% - 88px)'
+    let mainHeight = 'calc(100% - 88px)'
+
+    if (appState === 'games') {
+        mainHeight = runningGame ? 'calc(100% - 110px)' : 'calc(100% - 28px)'
+    }
 
     return (
         <div ref={mainDiv} style={{ height: mainHeight, padding: '0 16px' }}>

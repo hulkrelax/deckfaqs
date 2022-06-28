@@ -6,7 +6,7 @@ export type ListItem = {
     url?: string | undefined
 }
 
-type ListProps = {
+export type ListProps = {
     header: string
     data: ListItem[]
     handleClick: (text: string) => void
