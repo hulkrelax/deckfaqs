@@ -73,10 +73,12 @@ export const App = ({ serverAPI }: AppProps) => {
         let newRunningGame: string = undefined
         const appId = parseInt(strAppId)
         if (actionName == 'LaunchApp') {
-            let gameInfo: AppOverview = appStore.GetAppOverviewByGameID(
-                appId
-            )
-            if (gameInfo && !ignoreSteam.includes(appId) && !ignoreNonSteam.includes(gameInfo.display_name)) {
+            let gameInfo: AppOverview = appStore.GetAppOverviewByGameID(appId)
+            if (
+                gameInfo &&
+                !ignoreSteam.includes(appId) &&
+                !ignoreNonSteam.includes(gameInfo.display_name)
+            ) {
                 newRunningGame = gameInfo.display_name
             }
         }
@@ -129,8 +131,12 @@ export const App = ({ serverAPI }: AppProps) => {
                     games.push({ sortAsName: strSortAs, appName: strAppName })
                 }
             })
+            const apps = games.map((o) => o.appName)
+            const unique = games.filter(
+                ({ appName }, index) => !apps.includes(appName, index + 1)
+            )
             return {
-                games: games
+                games: unique
                     .sort((a, b) => a.sortAsName.localeCompare(b.sortAsName))
                     .map(({ appName }): ListItem => {
                         return { text: appName }
