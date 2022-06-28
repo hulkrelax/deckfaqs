@@ -3,6 +3,13 @@
 declare namespace SteamClient {
     const Apps: {
         GetAllShortcuts(): Promise<Shortcut[]>
+        RegisterForGameActionStart(
+            callback: (
+                actionType: number,
+                strAppId: string,
+                actionName: string
+            ) => any
+        ): RegisteredEvent
     }
     const InstallFolder: {
         GetInstallFolders(): Promise<InstallFolder[]>
@@ -60,7 +67,7 @@ type AppState = {
 }
 
 declare namespace appStore {
-    function GetAppOverviewByAppID(appId: number): AppOverview
+    function GetAppOverviewByGameID(appId: number): AppOverview
 }
 
 type RegisteredEvent = {

@@ -42,6 +42,7 @@ export const App = ({ serverAPI }: AppProps) => {
         'RPCS3',
         'xemu (emulator)',
         'Yuzu',
+        'Moonlight',
     ]
 
     const [appState, setAppState] = useState<PluginState>('games')
@@ -56,11 +57,26 @@ export const App = ({ serverAPI }: AppProps) => {
 
     const mainDiv = useRef(null)
 
-    const handleAppStateChange = ({ unAppID, bRunning }: AppState) => {
+    // This would work for Steam games but does not for non-steam games so we just use this for cleraing the running game
+    const handleAppStateChange = ({ bRunning }: AppState) => {
+        if (!bRunning) {
+            setRunningGame(undefined)
+        }
+    }
+
+    // This works for both Steam and non-Steam games
+    const handleGameActionStart = (
+        _actionType: number,
+        strAppId: string,
+        actionName: string
+    ) => {
         let newRunningGame: string = undefined
-        if (bRunning) {
-            let gameInfo: AppOverview = appStore.GetAppOverviewByAppID(unAppID)
-            if (gameInfo) {
+        const appId = parseInt(strAppId)
+        if (actionName == 'LaunchApp') {
+            let gameInfo: AppOverview = appStore.GetAppOverviewByGameID(
+                appId
+            )
+            if (gameInfo && !ignoreSteam.includes(appId) && !ignoreNonSteam.includes(gameInfo.display_name)) {
                 newRunningGame = gameInfo.display_name
             }
         }
@@ -86,7 +102,7 @@ export const App = ({ serverAPI }: AppProps) => {
                     if (!ignoreSteam.includes(app.nAppID)) {
                         if (
                             !currentRunningGame &&
-                            appStore.GetAppOverviewByAppID(app.nAppID)
+                            appStore.GetAppOverviewByGameID(app.nAppID)
                                 ?.display_status === DisplayStatus.Running
                         ) {
                             currentRunningGame = app.strAppName
@@ -101,8 +117,15 @@ export const App = ({ serverAPI }: AppProps) => {
 
             // Non-Steam Games
             const shortcuts = await SteamClient.Apps.GetAllShortcuts()
-            shortcuts.forEach(({ data: { strSortAs, strAppName } }) => {
+            shortcuts.forEach(({ appid, data: { strSortAs, strAppName } }) => {
                 if (!ignoreNonSteam.includes(strAppName)) {
+                    if (
+                        !currentRunningGame &&
+                        appStore.GetAppOverviewByGameID(appid)
+                            ?.display_status === DisplayStatus.Running
+                    ) {
+                        currentRunningGame = strAppName
+                    }
                     games.push({ sortAsName: strSortAs, appName: strAppName })
                 }
             })
@@ -126,8 +149,12 @@ export const App = ({ serverAPI }: AppProps) => {
                 handleAppStateChange
             )
 
+        const onGameActionStart = SteamClient.Apps.RegisterForGameActionStart(
+            handleGameActionStart
+        )
         return function cleanup() {
             onAppStateChange.unregister()
+            onGameActionStart.unregister()
         }
     }, [])
 
