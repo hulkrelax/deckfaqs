@@ -55,7 +55,7 @@ export const App = ({ serverAPI }: AppProps) => {
     const [guideUrl, setGuideUrl] = useState<string | undefined>(undefined)
     const [guideText, setGuideText] = useState<string | undefined>(undefined)
 
-    const mainDiv = useRef(null)
+    const mainDiv = useRef<HTMLDivElement>(null)
 
     // This would work for Steam games but does not for non-steam games so we just use this for cleraing the running game
     const handleAppStateChange = ({ bRunning }: AppState) => {
@@ -70,7 +70,7 @@ export const App = ({ serverAPI }: AppProps) => {
         strAppId: string,
         actionName: string
     ) => {
-        let newRunningGame: string = undefined
+        let newRunningGame: string | undefined = undefined
         const appId = parseInt(strAppId)
         if (actionName == 'LaunchApp') {
             let gameInfo: AppOverview = appStore.GetAppOverviewByGameID(appId)
@@ -88,17 +88,16 @@ export const App = ({ serverAPI }: AppProps) => {
     useEffect(() => {
         // the parent div sets the height to 100% which causes things to scroll too far
         // this is a bit of a hack but it works for the most part
-        mainDiv.current.parentNode.style = 'overflow: hidden'
-
+        mainDiv.current?.parentElement?.setAttribute('style', 'overflow:hidden')
         const getGames = async (): Promise<{
             games: ListItem[]
-            runningGame: string
+            runningGame?: string
         }> => {
             // Steam Games
             const installFolders =
                 await SteamClient.InstallFolder.GetInstallFolders()
             const games: { appName: string; sortAsName: string }[] = []
-            let currentRunningGame: string = undefined
+            let currentRunningGame: string | undefined = undefined
             installFolders.forEach((folder) => {
                 folder.vecApps.forEach((app) => {
                     if (!ignoreSteam.includes(app.nAppID)) {
@@ -245,8 +244,8 @@ export const App = ({ serverAPI }: AppProps) => {
     }
 
     const openGuide = async (url: string) => {
-        let gText: string = undefined
-        let gUrl: string = undefined
+        let guideText: string | undefined = undefined
+        let guideUrl: string | undefined = undefined
         const response = await serverAPI.fetchNoCors<{ body: string }>(url, {
             headers,
         })
@@ -256,12 +255,12 @@ export const App = ({ serverAPI }: AppProps) => {
                 const parser = new DOMParser()
                 const faq = parser.parseFromString(htmlBody, 'text/html')
                 const faqText = faq.getElementById('faqtext')
-                gText = faqText.innerText
+                guideText = faqText?.innerText
             } else {
-                gUrl = url
+                guideUrl = url
             }
-            setGuideText(gText)
-            setGuideUrl(gUrl)
+            setGuideText(guideText)
+            setGuideUrl(guideUrl)
             setAppState('guide')
         } else {
             console.error(response.result)

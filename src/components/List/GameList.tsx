@@ -1,6 +1,6 @@
 import { ButtonItem, PanelSection, PanelSectionRow } from 'decky-frontend-lib'
 import React from 'react'
-import { List, ListItem, ListProps } from './List'
+import { List, ListProps } from './List'
 
 type GameListProps = ListProps & {
     runningGame?: string | undefined

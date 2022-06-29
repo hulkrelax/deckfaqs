@@ -13,9 +13,9 @@ export type ListProps = {
 }
 
 export const List = ({ data, header, handleClick }: ListProps) => {
-    const listDiv = useRef(null)
+    const listDiv = useRef<HTMLDivElement>(null)
     useEffect(() => {
-        listDiv.current.scrollTo(0, 0)
+        listDiv.current?.scrollTo(0, 0)
     }, [data])
     return (
         <div style={{ height: '100%' }}>
