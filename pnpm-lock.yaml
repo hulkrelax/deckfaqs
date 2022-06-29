@@ -8,7 +8,6 @@ specifiers:
   '@rollup/plugin-typescript': ^8.3.3
   '@types/react': ^17.0.47
   '@types/react-dom': ^18.0.5
-  '@types/react-icons': ^3.0.0
   decky-frontend-lib: ^1.0.1
   prettier: 2.7.1
   react: ^18.2.0
@@ -33,7 +32,6 @@ devDependencies:
   '@rollup/plugin-typescript': 8.3.3_g4qkabtmybowem44p7ts7jnbqm
   '@types/react': 17.0.47
   '@types/react-dom': 18.0.5
-  '@types/react-icons': 3.0.0_react@18.2.0
   prettier: 2.7.1
   rollup: 2.75.7
   rollup-plugin-import-assets: 1.1.1_rollup@2.75.7
@@ -142,15 +140,6 @@ packages:
     resolution: {integrity: sha512-OWPWTUrY/NIrjsAPkAk1wW9LZeIjSvkXRhclsFO8CZcZGCOg2G0YZy4ft+rOyYxy8B7ui5iZzi9OkDebZ7/QSA==}
     dependencies:
       '@types/react': 17.0.47
-    dev: true
-
-  /@types/react-icons/3.0.0_react@18.2.0:
-    resolution: {integrity: sha512-Vefs6LkLqF61vfV7AiAqls+vpR94q67gunhMueDznG+msAkrYgRxl7gYjNem/kZ+as2l2mNChmF1jRZzzQQtMg==}
-    deprecated: This is a stub types definition. react-icons provides its own type definitions, so you do not need this installed.
-    dependencies:
-      react-icons: 4.4.0_react@18.2.0
-    transitivePeerDependencies:
-      - react
     dev: true
 
   /@types/react/17.0.47:
@@ -290,12 +279,14 @@ packages:
 
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+    dev: false
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: false
 
   /magic-string/0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
@@ -351,12 +342,14 @@ packages:
       react: '*'
     dependencies:
       react: 18.2.0
+    dev: false
 
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
 
   /resolve/1.22.1:
     resolution: {integrity: sha512-nBpuuYuY5jFsli/JIs1oldw6fOQCBioohqWZg/2hiaOybXOft4lonv85uDOKXdf8rhyK159cxU5cDcK/NKk8zw==}

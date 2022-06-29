@@ -16,7 +16,6 @@
         "@rollup/plugin-typescript": "^8.3.3",
         "@types/react": "^17.0.47",
         "@types/react-dom": "^18.0.5",
-        "@types/react-icons": "^3.0.0",
         "prettier": "2.7.1",
         "rollup": "^2.75.7",
         "rollup-plugin-import-assets": "^1.1.1",
