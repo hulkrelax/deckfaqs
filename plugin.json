@@ -3,8 +3,8 @@
     "author": "hulkrelax",
     "flags": [],
     "publish": {
-        "discord_id": "488760856277155862",
+        "tags": ["guides", "utility"],
         "description": "A GameFAQs browser for the Steam Deck (both Steam and non-Steam Games)",
-        "tags": ["guides", "utility"]
-    }
+        "image": "https://raw.githubusercontent.com/hulkrelax/deckfaqs/main/images/release.png"
+      }
 }
