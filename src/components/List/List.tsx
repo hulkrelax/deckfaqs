@@ -1,5 +1,5 @@
-import { ButtonItem, PanelSectionRow } from 'decky-frontend-lib'
 import React, { useEffect, useRef } from 'react'
+import { ListElement } from './ListElement'
 
 export type ListItem = {
     text: string
@@ -17,6 +17,7 @@ export const List = ({ data, header, handleClick }: ListProps) => {
     useEffect(() => {
         listDiv.current?.scrollTo(0, 0)
     }, [data])
+
     return (
         <div style={{ height: '100%' }}>
             <div
@@ -39,15 +40,12 @@ export const List = ({ data, header, handleClick }: ListProps) => {
                 }}
             >
                 {data?.map(({ text, url }) => (
-                    <PanelSectionRow>
-                        <ButtonItem
-                            key={text}
-                            layout="below"
-                            onClick={() => handleClick(url ?? text)}
-                        >
-                            {text}
-                        </ButtonItem>
-                    </PanelSectionRow>
+                    <ListElement
+                        key={text}
+                        displayText={text}
+                        value={url ?? text}
+                        onClick={handleClick}
+                    />
                 ))}
             </div>
         </div>

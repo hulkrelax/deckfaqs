@@ -1,66 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { List, ListItem } from '../List/List'
-import { Guide } from '../Guide/Guide'
-import { DialogButton, ServerAPI } from 'decky-frontend-lib'
-import { FaHome } from 'react-icons/fa'
-import { GameList } from '../List/GameList'
-
-type PluginState = 'games' | 'results' | 'guides' | 'guide'
-
-type SearchResult = {
-    product_name: string | undefined
-    platform_name: string | undefined
-    url: string | undefined
-}
+import React, { useEffect, useRef, useContext } from 'react'
+import { ListItem } from '../List/List'
+import { ServerAPI } from 'decky-frontend-lib'
+import { AppContext } from '../../context/AppContext'
+import { ActionType } from '../../reducers/AppReducer'
+import { ignoreNonSteam, ignoreSteam } from '../../constants'
+import { Nav } from '../Nav/Nav'
+import { MainView } from './MainView'
+import { MyRouter } from './MyRouter'
 
 type AppProps = {
-    serverAPI: ServerAPI
+    serverApi: ServerAPI
 }
 
 // This used to use css modules, but with the way the new React Based router works,
 // I have yet to figure out how to import css properly
+export const App = ({ serverApi }: AppProps) => {
+    const { state, dispatch } = useContext(AppContext)
 
-export const App = ({ serverAPI }: AppProps) => {
-    const userAgent =
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.61 Safari/537.36'
-    const headers = { 'User-Agent': userAgent }
-    const faqsNightmareRegex =
-        /(\/faqs\/\d+)\">(.*?)<\/a>[\S\n\t ]*?(rec)?\">\n.*(v\.[^,]*).*title=\"(.*)\"/gm
-
-    const ignoreSteam = [1887720, 1070560, 1391110, 228980]
-    const ignoreNonSteam = [
-        'EmulationStation-DE-x64_SteamDeck',
-        'Google Chrome',
-        'Cemu',
-        'Citra',
-        'Dolphin (emulator)',
-        'DuckStation (Emulator)',
-        'PCSX2',
-        'PPSSPP',
-        'PrimeHack',
-        'RetroArch',
-        'RPCS3',
-        'xemu (emulator)',
-        'Yuzu',
-        'Moonlight',
-    ]
-
-    const [appState, setAppState] = useState<PluginState>('games')
-    const [games, setGames] = useState<ListItem[]>([])
-    const [runningGame, setRunningGame] = useState<string | undefined>(
-        undefined
-    )
-    const [searchResults, setSearchResults] = useState<ListItem[]>([])
-    const [guides, setGuides] = useState<ListItem[]>([])
-    const [guideUrl, setGuideUrl] = useState<string | undefined>(undefined)
-    const [guideText, setGuideText] = useState<string | undefined>(undefined)
+    const { pluginState, runningGame } = state
 
     const mainDiv = useRef<HTMLDivElement>(null)
 
     // This would work for Steam games but does not for non-steam games so we just use this for cleraing the running game
-    const handleAppStateChange = ({ bRunning }: AppState) => {
+    const handleSteamAppStateChange = ({ bRunning }: AppState) => {
         if (!bRunning) {
-            setRunningGame(undefined)
+            dispatch({
+                type: ActionType.UPDATE_RUNNING_GAME,
+                payload: undefined,
+            })
         }
     }
 
@@ -82,7 +49,10 @@ export const App = ({ serverAPI }: AppProps) => {
                 newRunningGame = gameInfo.display_name
             }
         }
-        setRunningGame(newRunningGame)
+        dispatch({
+            type: ActionType.UPDATE_RUNNING_GAME,
+            payload: newRunningGame,
+        })
     }
 
     useEffect(() => {
@@ -97,17 +67,16 @@ export const App = ({ serverAPI }: AppProps) => {
             const installFolders =
                 await SteamClient.InstallFolder.GetInstallFolders()
             const games: { appName: string; sortAsName: string }[] = []
-            let currentRunningGame: string | undefined = undefined
+            const currentRunningGame = MyRouter.MainRunningApp?.display_name
+            let runningGame: string | undefined = undefined
             installFolders.forEach((folder) => {
                 folder.vecApps.forEach((app) => {
                     if (!ignoreSteam.includes(app.nAppID)) {
                         if (
-                            !currentRunningGame &&
-                            appStore.GetAppOverviewByGameID(app.nAppID)
-                                ?.display_status === DisplayStatus.Running
-                        ) {
-                            currentRunningGame = app.strAppName
-                        }
+                            !runningGame &&
+                            currentRunningGame == app.strAppName
+                        )
+                            runningGame = currentRunningGame
                         games.push({
                             sortAsName: app.strSortAs,
                             appName: app.strAppName,
@@ -118,15 +87,10 @@ export const App = ({ serverAPI }: AppProps) => {
 
             // Non-Steam Games
             const shortcuts = await SteamClient.Apps.GetAllShortcuts()
-            shortcuts.forEach(({ appid, data: { strSortAs, strAppName } }) => {
+            shortcuts.forEach(({ data: { strSortAs, strAppName } }) => {
                 if (!ignoreNonSteam.includes(strAppName)) {
-                    if (
-                        !currentRunningGame &&
-                        appStore.GetAppOverviewByGameID(appid)
-                            ?.display_status === DisplayStatus.Running
-                    ) {
-                        currentRunningGame = strAppName
-                    }
+                    if (!runningGame && currentRunningGame == strAppName)
+                        runningGame = currentRunningGame
                     games.push({ sortAsName: strSortAs, appName: strAppName })
                 }
             })
@@ -145,13 +109,15 @@ export const App = ({ serverAPI }: AppProps) => {
         }
 
         getGames().then(({ games, runningGame }) => {
-            setGames(games)
-            setRunningGame(runningGame)
+            dispatch({
+                type: ActionType.UPDATE_GAMES,
+                payload: { games, runningGame },
+            })
         })
 
         const onAppStateChange =
             SteamClient.GameSessions.RegisterForAppLifetimeNotifications(
-                handleAppStateChange
+                handleSteamAppStateChange
             )
 
         const onGameActionStart = SteamClient.Apps.RegisterForGameActionStart(
@@ -163,168 +129,16 @@ export const App = ({ serverAPI }: AppProps) => {
         }
     }, [])
 
-    const back = () => {
-        let newState: PluginState
-        switch (appState) {
-            case 'guides':
-                newState = 'results'
-                break
-            case 'guide':
-                newState = 'guides'
-                break
-            default:
-                newState = 'games'
-                break
-        }
-
-        setAppState(newState)
-    }
-
-    const backToGames = () => {
-        setAppState('games')
-    }
-
-    const getGuides = async (url: string) => {
-        const guides: ListItem[] = []
-        const response = await serverAPI.fetchNoCors<{ body: string }>(
-            `${url}/faqs`,
-            { headers }
-        )
-        if (response.success) {
-            let body = response.result.body
-            const faqs = Array.from(body.matchAll(faqsNightmareRegex))
-            // sort by recommended
-            faqs.sort((a, _b) => {
-                if (a[3] == 'rec') return -1
-                return 1
-            })
-            for (const faq of faqs) {
-                const faqUrl = faq[1],
-                    title = faq[2],
-                    version = faq[4],
-                    date = faq[5]
-                guides.push({
-                    url: `${url}/${faqUrl}`,
-                    text: `${title} - ${version} - ${date}`,
-                })
-            }
-        } else {
-            console.error(response.result)
-        }
-
-        setGuides(guides)
-        setAppState('guides')
-    }
-
-    const search = async (game: string) => {
-        game = game.replace(' ', '+')
-        const searchUrl = `https://gamefaqs.gamespot.com/ajax/home_game_search?term=${game}`
-        const home = 'https://gamefaqs.gamespot.com'
-        const response = await serverAPI.fetchNoCors<{ body: string }>(
-            searchUrl,
-            { headers }
-        )
-        let searchResults: ListItem[] = []
-        if (response.success) {
-            const results: SearchResult[] = JSON.parse(response.result.body)
-            results.forEach((result) => {
-                if (result.product_name) {
-                    const url = `${home}/${result.url}`
-                    searchResults.push({
-                        text: `${result.product_name} - ${result.platform_name}`,
-                        url: url,
-                    })
-                }
-            })
-        } else {
-            console.error(response.result)
-        }
-        setSearchResults(searchResults)
-        setAppState('results')
-    }
-
-    const openGuide = async (url: string) => {
-        let guideText: string | undefined = undefined
-        let guideUrl: string | undefined = undefined
-        const response = await serverAPI.fetchNoCors<{ body: string }>(url, {
-            headers,
-        })
-        if (response.success) {
-            const htmlBody: string = response.result.body
-            if (htmlBody.includes('<div class="faqtext" id="faqtext">')) {
-                const parser = new DOMParser()
-                const faq = parser.parseFromString(htmlBody, 'text/html')
-                const faqText = faq.getElementById('faqtext')
-                guideText = faqText?.innerText
-            } else {
-                guideUrl = url
-            }
-            setGuideText(guideText)
-            setGuideUrl(guideUrl)
-            setAppState('guide')
-        } else {
-            console.error(response.result)
-        }
-    }
-
-    const Components = Object.freeze({
-        games: (
-            <GameList
-                header="Installed Games"
-                data={games}
-                handleClick={search}
-                runningGame={runningGame}
-            />
-        ),
-        results: (
-            <List
-                header="Search Results"
-                data={searchResults}
-                handleClick={getGuides}
-            />
-        ),
-        guides: <List header="Guides" data={guides} handleClick={openGuide} />,
-        guide: <Guide url={guideUrl} text={guideText} />,
-    })
-
-    const navButtonStyle = {
-        height: '40px',
-        width: '50%',
-        minWidth: '0',
-        padding: '10px 12px',
-    }
-
     // I'm sure there is a more elegant way to do this but I don't have time for that :smile:
     let mainHeight = 'calc(100% - 88px)'
 
-    if (appState === 'games') {
+    if (pluginState === 'games') {
         mainHeight = runningGame ? 'calc(100% - 110px)' : 'calc(100% - 28px)'
     }
-
     return (
         <div ref={mainDiv} style={{ height: mainHeight, padding: '0 16px' }}>
-            <div
-                style={{
-                    display: appState == 'games' ? 'none' : 'flex',
-                    width: '100%',
-                    marginBottom: '10px',
-                }}
-            >
-                {appState !== 'games' && appState !== 'results' && (
-                    <DialogButton
-                        style={{ ...navButtonStyle, marginRight: '10px' }}
-                        onClick={backToGames}
-                    >
-                        <FaHome
-                            style={{ margin: '0 auto', display: 'block' }}
-                        />
-                    </DialogButton>
-                )}
-                <DialogButton style={navButtonStyle} onClick={back}>
-                    Back
-                </DialogButton>
-            </div>
-            {Components[appState]}
+            <Nav />
+            <MainView serverApi={serverApi} />
         </div>
     )
 }
