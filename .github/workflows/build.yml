@@ -29,8 +29,9 @@ jobs:
 
             - name: copy files into build
               run: |
-                  cp main.py ./dist/
                   cp plugin.json ./dist/
+                  mkdir ./dist/dist
+                  mv ./dist/index.js ./dist/dist/
 
             - name: Upload package
               uses: actions/upload-artifact@v2
