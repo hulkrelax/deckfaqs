@@ -1,6 +1,5 @@
 import { DialogButton, QuickAccessTab, Router } from 'decky-frontend-lib'
 import React, { useContext } from 'react'
-import { MyRouter } from '../App/MyRouter'
 import { AppContext } from '../../context/AppContext'
 
 const guideStyle = {
@@ -31,13 +30,13 @@ export const FullScreenGuide = () => {
                     display: 'flex',
                 }}
             >
-                {MyRouter.MainRunningApp !== undefined && (
+                {Router.MainRunningApp !== undefined && (
                     <DialogButton
                         style={{ ...navButtonStyle, marginRight: '10px' }}
                         onClick={() => {
                             Router.NavigateBackOrOpenMenu()
                             setTimeout(
-                                () => MyRouter.NavigateToRunningApp(),
+                                () => Router.NavigateToRunningApp(),
                                 200
                             )
                         }}

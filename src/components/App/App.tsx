@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useContext } from 'react'
 import { ListItem } from '../List/List'
-import { ServerAPI } from 'decky-frontend-lib'
+import { ServerAPI, Router} from 'decky-frontend-lib'
 import { AppContext } from '../../context/AppContext'
 import { ActionType } from '../../reducers/AppReducer'
 import { ignoreNonSteam, ignoreSteam } from '../../constants'
 import { Nav } from '../Nav/Nav'
 import { MainView } from './MainView'
-import { MyRouter } from './MyRouter'
 
 type AppProps = {
     serverApi: ServerAPI
@@ -67,7 +66,7 @@ export const App = ({ serverApi }: AppProps) => {
             const installFolders =
                 await SteamClient.InstallFolder.GetInstallFolders()
             const games: { appName: string; sortAsName: string }[] = []
-            const currentRunningGame = MyRouter.MainRunningApp?.display_name
+            const currentRunningGame = Router.MainRunningApp?.display_name
             let runningGame: string | undefined = undefined
             installFolders.forEach((folder) => {
                 folder.vecApps.forEach((app) => {

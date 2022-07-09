@@ -8,7 +8,7 @@ specifiers:
   '@rollup/plugin-typescript': ^8.3.3
   '@types/react': ^17.0.47
   '@types/react-dom': ^18.0.5
-  decky-frontend-lib: ^1.0.1
+  decky-frontend-lib: ^1.1.0
   prettier: 2.7.1
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -19,7 +19,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 1.0.1
+  decky-frontend-lib: 1.1.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.4.0_react@18.2.0
@@ -188,8 +188,8 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: true
 
-  /decky-frontend-lib/1.0.1:
-    resolution: {integrity: sha512-SgIPoB3IcWbzVRlXvs8JfhwrMphHYa7O/Ek2mh+rC0WTVT3TI2qGJ5+OoV16mw5kGY0DMu1ikcZC6ib1lh2zKQ==}
+  /decky-frontend-lib/1.1.0:
+    resolution: {integrity: sha512-wMDHMAM4ycR4hUfRQf16GxgxwkWpcTnaR712cljLrTCzGJVQp1IZuejss1eHf0dviv77VYkVp0s9QW2BIlakmQ==}
     dev: false
 
   /deepmerge/4.2.2:
