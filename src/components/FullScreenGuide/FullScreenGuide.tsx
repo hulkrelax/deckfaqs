@@ -1,27 +1,42 @@
-import { DialogButton, QuickAccessTab, Router } from 'decky-frontend-lib'
-import React, { useContext } from 'react'
-import { AppContext } from '../../context/AppContext'
+import {
+    DialogButton,
+    Focusable,
+    QuickAccessTab,
+    Router,
+    ServerAPI,
+} from 'decky-frontend-lib';
+import React, { useContext } from 'react';
+import { AppContext } from '../../context/AppContext';
+import { Guide } from '../Guide/Guide';
 
 const guideStyle = {
     border: 'none',
     overflow: 'hidden',
     height: '100%',
     width: '100%',
-}
+};
 
 const navButtonStyle = {
     height: '40px',
     width: '200px',
     minWidth: '0',
     padding: '10px 12px',
-}
+};
 
-export const FullScreenGuide = () => {
-    const {
-        state: { currentGuide },
-    } = useContext(AppContext)
+type FullGuideProps = {
+    serverApi: ServerAPI;
+};
+export const FullScreenGuide = ({ serverApi }: FullGuideProps) => {
     return (
-        <div style={{ marginTop: '50px', color: 'white' }}>
+        <div
+            style={{
+                display: 'flex',
+                flexFlow: 'column',
+                marginTop: '50px',
+                flexGrow: '1',
+                overflow: 'auto',
+            }}
+        >
             <div
                 style={{
                     marginBottom: '10px',
@@ -30,43 +45,39 @@ export const FullScreenGuide = () => {
                     display: 'flex',
                 }}
             >
-                {Router.MainRunningApp !== undefined && (
+                <Focusable>
+                    {Router.MainRunningApp !== undefined && (
+                        <DialogButton
+                            style={{ ...navButtonStyle, marginRight: '10px' }}
+                            onClick={() => {
+                                Router.NavigateBackOrOpenMenu();
+                                setTimeout(
+                                    () => Router.NavigateToRunningApp(),
+                                    200
+                                );
+                            }}
+                        >
+                            Back to Game
+                        </DialogButton>
+                    )}
                     <DialogButton
-                        style={{ ...navButtonStyle, marginRight: '10px' }}
+                        style={navButtonStyle}
                         onClick={() => {
-                            Router.NavigateBackOrOpenMenu()
+                            Router.NavigateBackOrOpenMenu();
                             setTimeout(
-                                () => Router.NavigateToRunningApp(),
+                                () =>
+                                    Router.OpenQuickAccessMenu(
+                                        QuickAccessTab.Decky
+                                    ),
                                 200
-                            )
+                            );
                         }}
                     >
-                        Back to Game
+                        Back to DeckFAQs
                     </DialogButton>
-                )}
-                <DialogButton
-                    style={navButtonStyle}
-                    onClick={() => {
-                        Router.NavigateBackOrOpenMenu()
-                        setTimeout(
-                            () =>
-                                Router.OpenQuickAccessMenu(
-                                    QuickAccessTab.Decky
-                                ),
-                            200
-                        )
-                    }}
-                >
-                    Back to DeckFAQs
-                </DialogButton>
+                </Focusable>
             </div>
-            <div style={{ height: '400px' }}>
-                <iframe
-                    src={currentGuide?.guideUrl}
-                    style={guideStyle}
-                    sandbox=""
-                />
-            </div>
+            <Guide fullscreen={true} serverApi={serverApi} />
         </div>
-    )
-}
+    );
+};

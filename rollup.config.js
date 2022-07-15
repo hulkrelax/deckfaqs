@@ -1,12 +1,12 @@
-import commonjs from '@rollup/plugin-commonjs'
-import json from '@rollup/plugin-json'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import replace from '@rollup/plugin-replace'
-import typescript from '@rollup/plugin-typescript'
-import { defineConfig } from 'rollup'
-import importAssets from 'rollup-plugin-import-assets'
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
+import typescript from '@rollup/plugin-typescript';
+import { defineConfig } from 'rollup';
+import importAssets from 'rollup-plugin-import-assets';
 
-import { name } from './plugin.json'
+import { name } from './plugin.json';
 
 export default defineConfig({
     input: './src/index.tsx',
@@ -34,4 +34,4 @@ export default defineConfig({
         format: 'iife',
         exports: 'default',
     },
-})
+});
