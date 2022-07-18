@@ -5,9 +5,9 @@ import {
     ServerAPI,
 } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
-import { headers } from '../../constants';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
+import { getContent } from '../../utils';
 import { List, ListItem } from './List';
 
 type GameListProps = {
@@ -25,29 +25,32 @@ export const GameList = ({ serverApi }: GameListProps) => {
         game = game.replace(' ', '+');
         const searchUrl = `https://gamefaqs.gamespot.com/ajax/home_game_search?term=${game}`;
         const home = 'https://gamefaqs.gamespot.com';
-        const response = await serverApi.fetchNoCors<{ body: string }>(
+
+        getContent(
             searchUrl,
-            { headers }
-        );
-        let searchResults: ListItem[] = [];
-        if (response.success) {
-            const results: SearchResult[] = JSON.parse(response.result.body);
-            results.forEach((result) => {
-                if (result.product_name) {
-                    const url = `${home}/${result.url}`;
-                    searchResults.push({
-                        text: `${result.product_name} - ${result.platform_name}`,
-                        url: url,
-                    });
-                }
-            });
-        } else {
-            console.error(response.result);
+            serverApi,
+            `function get_games() {
+            return document.documentElement.innerText;
         }
-        dispatch({
-            type: ActionType.UPDATE_RESULTS,
-            payload: searchResults,
-        });
+        get_games()`,
+            (result: string) => {
+                const results: SearchResult[] = JSON.parse(result);
+                let searchResults: ListItem[] = [];
+                results.forEach((result) => {
+                    if (result.product_name) {
+                        const url = `${home}${result.url}`;
+                        searchResults.push({
+                            text: `${result.product_name} - ${result.platform_name}`,
+                            url: url,
+                        });
+                    }
+                });
+                dispatch({
+                    type: ActionType.UPDATE_RESULTS,
+                    payload: searchResults,
+                });
+            }
+        );
     };
 
     const { state, dispatch } = useContext(AppContext);

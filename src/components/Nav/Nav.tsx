@@ -4,10 +4,12 @@ import { BsArrowsFullscreen } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
+import { DefaultProps } from '../../utils';
+import { TocDropdown } from './TocDropdown';
 
-export const Nav = () => {
+export const Nav = ({ serverApi }: DefaultProps) => {
     const {
-        state: { pluginState },
+        state: { pluginState, currentGuide },
         dispatch,
     } = useContext(AppContext);
 
@@ -28,6 +30,10 @@ export const Nav = () => {
         padding: '10px 12px',
         margin: '0 auto',
     };
+    const childStyle = {
+        maxWidth: '49%',
+        flexGrow: 1,
+    };
     return useMemo(() => {
         return (
             <div style={{ flex: '0 1 auto', marginBottom: '10px' }}>
@@ -36,6 +42,7 @@ export const Nav = () => {
                         display:
                             pluginState == 'games' ? 'none' : 'inline-block',
                         width: '100%',
+                        marginBottom: '5px',
                     }}
                 >
                     <Focusable>
@@ -60,20 +67,33 @@ export const Nav = () => {
                         </DialogButton>
                     </Focusable>
                 </div>
-                <div>
-                    {pluginState === 'guide' && (
-                        <DialogButton
-                            layout="below"
-                            style={{ margin: '10px 0' }}
-                            onClick={() => {
-                                Router.CloseSideMenus();
-                                Router.Navigate('/deckfaqs-fullscreen');
-                            }}
-                        >
-                            <BsArrowsFullscreen />
-                        </DialogButton>
-                    )}
-                </div>
+                {pluginState == 'guide' && (
+                    <Focusable
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                        }}
+                    >
+                        <div style={{ ...childStyle, marginRight: '5px' }}>
+                            <DialogButton
+                                style={{ minWidth: '0px' }}
+                                onClick={() => {
+                                    Router.CloseSideMenus();
+                                    Router.Navigate('/deckfaqs-fullscreen');
+                                }}
+                            >
+                                <BsArrowsFullscreen />
+                            </DialogButton>
+                        </div>
+                        {currentGuide?.guideToc && (
+                            <TocDropdown
+                                style={childStyle}
+                                serverApi={serverApi}
+                            />
+                        )}
+                    </Focusable>
+                )}
             </div>
         );
     }, [pluginState]);

@@ -1,5 +1,5 @@
 import { ListItem } from '../components/List/List';
-import { Guide, PluginState, TAppState } from '../context/AppContext';
+import { GuideContents, PluginState, TAppState } from '../context/AppContext';
 
 export enum ActionType {
     UPDATE_PLUGIN_STATE,
@@ -49,7 +49,7 @@ export type UpdateRunningGameAction = {
 
 export type UpdateGuideAction = {
     type: ActionType.UPDATE_GUIDE;
-    payload: Guide;
+    payload: GuideContents;
 };
 
 export type BackAction = {

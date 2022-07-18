@@ -19,6 +19,11 @@ declare namespace SteamClient {
             callback: (appState: AppState) => any
         ): RegisteredEvent;
     };
+    const BrowserView: {
+        Create(): any;
+        CreatePopup(): any;
+        Destroy(e: any): void;
+    };
 }
 
 declare const enum DisplayStatus {

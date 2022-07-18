@@ -1,9 +1,10 @@
 // import { ButtonItem, PanelSection, PanelSectionRow } from 'decky-frontend-lib'
 import { ServerAPI } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
-import { faqsNightmareRegex, headers } from '../../constants';
+import { faqsNightmareRegex } from '../../constants';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
+import { getContent } from '../../utils';
 import { List, ListItem } from './List';
 
 type ResultListProps = {
@@ -18,36 +19,41 @@ export const ResultList = ({ serverApi }: ResultListProps) => {
 
     const getGuides = async (url: string) => {
         const guides: ListItem[] = [];
-        const response = await serverApi.fetchNoCors<{ body: string }>(
-            `${url}/faqs`,
-            { headers }
-        );
-        if (response.success) {
-            let body = response.result.body;
-            const faqs = Array.from(body.matchAll(faqsNightmareRegex));
-            // sort by recommended
-            faqs.sort((a, _b) => {
-                if (a[3] == 'rec') return -1;
-                return 1;
-            });
-            for (const faq of faqs) {
-                const faqUrl = faq[1],
-                    title = faq[2],
-                    version = faq[4],
-                    date = faq[5];
-                guides.push({
-                    url: `${url}/${faqUrl}`,
-                    text: `${title} - ${version} - ${date}`,
+        const faqUrl = `${url}/faqs`;
+        getContent(
+            faqUrl,
+            serverApi,
+            `function get_guides() {
+                let content = document.getElementsByClassName("guides")
+                if(content.length > 0)
+                    return document.documentElement.outerHTML
+                return undefined
+            }
+            get_guides()`,
+            (result: string) => {
+                const body = result;
+                const faqs = Array.from(body.matchAll(faqsNightmareRegex));
+                // sort by recommended
+                faqs.sort((a, _b) => {
+                    if (a[3] == 'rec') return -1;
+                    return 1;
+                });
+                for (const faq of faqs) {
+                    const faqUrl = faq[1],
+                        title = faq[2],
+                        version = faq[4],
+                        date = faq[5];
+                    guides.push({
+                        url: `${url}${faqUrl}`,
+                        text: `${title} - ${version} - ${date}`,
+                    });
+                }
+                dispatch({
+                    type: ActionType.UPDATE_GUIDES,
+                    payload: guides,
                 });
             }
-        } else {
-            console.error(response.result);
-        }
-
-        dispatch({
-            type: ActionType.UPDATE_GUIDES,
-            payload: guides,
-        });
+        );
     };
 
     return useMemo(

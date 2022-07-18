@@ -4,10 +4,12 @@ import { AppActions, appReducer } from '../reducers/AppReducer';
 
 export type PluginState = 'games' | 'results' | 'guides' | 'guide';
 
-export type Guide = {
-    guideUrl?: string | undefined;
-    guideText?: string | undefined;
-    guideHtml?: string | undefined;
+export type GuideContents = {
+    guideUrl?: string;
+    guideHtml?: string;
+    guideToc?: Array<any>;
+    currentTocSection?: any;
+    anchor?: string;
 };
 
 export type TAppState = {
@@ -16,7 +18,7 @@ export type TAppState = {
     searchResults: ListItem[];
     guides: ListItem[];
     runningGame?: string;
-    currentGuide?: Guide;
+    currentGuide?: GuideContents;
 };
 
 type TAppContext = {
@@ -39,15 +41,19 @@ export const AppContext = createContext<TAppContext>({
 });
 
 type AppContextProps = {
-    initState: TAppState;
+    incomingState?: TAppState;
 };
 
 // This might be kind of overkill but figured why not try non-Redux state management
 export const AppContextProvider: React.FC<AppContextProps> = ({
     children,
-    initState,
+    incomingState,
 }) => {
-    const [state, dispatch] = useReducer(appReducer, initState);
+    const myState = {
+        ...initialState,
+        ...incomingState,
+    };
+    const [state, dispatch] = useReducer(appReducer, myState);
     const value = { state, dispatch };
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
