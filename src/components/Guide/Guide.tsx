@@ -81,6 +81,8 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                                             anchor = anchor.substring(
                                                 anchor.indexOf('#') + 1
                                             );
+                                        } else {
+                                            anchor = '';
                                         }
                                         dispatch({
                                             type: ActionType.UPDATE_GUIDE,
@@ -105,6 +107,18 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                 domNode.attribs.class === 'ftoc'
             ) {
                 return <span></span>;
+            } else if (
+                domNode instanceof Element &&
+                domNode.name === 'img' &&
+                domNode.attribs &&
+                domNode.attribs.src
+            ) {
+                return (
+                    <img
+                        {...domNode.attribs}
+                        src={`https://gamefaqs.gamespot.com${domNode.attribs.src}`}
+                    />
+                );
             }
             return domNode;
         },
@@ -123,7 +137,7 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         if (anchor.length > 0) {
             const elementToScrollTo =
                 guideDiv.current?.querySelector(`[name="${anchor}"]`) ??
-                guideDiv.current?.querySelector(`#${anchor}`);
+                guideDiv.current?.querySelector(`[id="${anchor}"]`);
             if (elementToScrollTo) {
                 elementToScrollTo.scrollIntoView();
             } else {
@@ -143,6 +157,8 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                     }
                 );
             }
+        } else {
+            guideDiv.current?.querySelector('#faqwrap')?.scrollIntoView();
         }
     };
 
@@ -1258,19 +1274,10 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         };
     }, []);
 
-    // const guide = guideText ? (
-    //     <div style={{ height: '100%', overflowY: 'scroll' }}>
-    //         <pre style={{ whiteSpace: 'pre-wrap' }}>{guideText}</pre>
-    //     </div>
-    // ) : (
-    //     <div style={{ height: '400px' }}>
-    //         <iframe src={guideUrl} style={guideStyle} sandbox="" />
-    //     </div>
-    // );
     return useMemo(
         () => (
             <div
-                style={{ background: '#fff', overflowY: 'auto' }}
+                style={{ flexGrow: '1', background: '#fff', overflowY: 'auto' }}
                 ref={guideDiv}
             >
                 {parse(currentGuide?.guideHtml ?? '', options)}

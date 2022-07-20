@@ -17,9 +17,10 @@ export const getContent = (
     let maxPolling = 0;
     let myInterval = setInterval(async () => {
         console.log('polling');
-        if (maxPolling >= 20) {
+        if (maxPolling >= 100) {
             clearInterval(myInterval);
             SteamClient.BrowserView.Destroy(test);
+            return;
         }
         const response = await serverApi.fetchNoCors<{ body: string }>(
             'http://localhost:8080/json'
@@ -56,9 +57,10 @@ export const getGuideHtml = (
     test.LoadURL(url);
     let maxPolling = 0;
     let myInterval = setInterval(async () => {
-        if (maxPolling >= 20) {
+        if (maxPolling >= 100) {
             clearInterval(myInterval);
             SteamClient.BrowserView.Destroy(test);
+            return;
         }
         maxPolling++;
         console.log('polling');
