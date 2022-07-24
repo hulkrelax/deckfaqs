@@ -1,23 +1,18 @@
-import React, { useEffect, useRef } from 'react'
-import { ListElement } from './ListElement'
+import React from 'react';
+import { ListElement } from './ListElement';
 
 export type ListItem = {
-    text: string
-    url?: string | undefined
-}
+    text: string;
+    url?: string | undefined;
+};
 
 export type ListProps = {
-    header: string
-    data: ListItem[]
-    handleClick: (text: string) => void
-}
+    header: string;
+    data: ListItem[];
+    handleClick: (text: string) => void;
+};
 
 export const List = ({ data, header, handleClick }: ListProps) => {
-    const listDiv = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        listDiv.current?.scrollTo(0, 0)
-    }, [data])
-
     return (
         <div style={{ height: '100%' }}>
             <div
@@ -31,14 +26,7 @@ export const List = ({ data, header, handleClick }: ListProps) => {
             >
                 {header}
             </div>
-            <div
-                ref={listDiv}
-                style={{
-                    height: '100%',
-                    overflowY: 'scroll',
-                    overflowX: 'hidden',
-                }}
-            >
+            <div>
                 {data?.map(({ text, url }) => (
                     <ListElement
                         key={text}
@@ -49,5 +37,5 @@ export const List = ({ data, header, handleClick }: ListProps) => {
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};

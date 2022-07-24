@@ -1,5 +1,5 @@
-import { ListItem } from '../components/List/List'
-import { Guide, PluginState, TAppState } from '../context/AppContext'
+import { ListItem } from '../components/List/List';
+import { GuideContents, PluginState, TAppState } from '../context/AppContext';
 
 export enum ActionType {
     UPDATE_PLUGIN_STATE,
@@ -10,6 +10,7 @@ export enum ActionType {
     UPDATE_GUIDE,
     BACK,
     BACK_TO_STATE,
+    UPDATE_DARK_MODE,
 }
 
 export type AppActions =
@@ -21,45 +22,50 @@ export type AppActions =
     | UpdateGuideAction
     | BackAction
     | BackToStateAction
+    | UpdateDarkModeAction;
 
 export type UpdatePluginStateAction = {
-    type: ActionType.UPDATE_PLUGIN_STATE
-    payload: PluginState
-}
+    type: ActionType.UPDATE_PLUGIN_STATE;
+    payload: PluginState;
+};
 
 export type UpdateResultsAction = {
-    type: ActionType.UPDATE_RESULTS
-    payload: ListItem[]
-}
+    type: ActionType.UPDATE_RESULTS;
+    payload: ListItem[];
+};
 
 export type UpdateGamesAction = {
-    type: ActionType.UPDATE_GAMES
-    payload: { games: ListItem[]; runningGame?: string }
-}
+    type: ActionType.UPDATE_GAMES;
+    payload: { games: ListItem[]; runningGame?: string };
+};
 
 export type UpdateGuidesAction = {
-    type: ActionType.UPDATE_GUIDES
-    payload: ListItem[]
-}
+    type: ActionType.UPDATE_GUIDES;
+    payload: ListItem[];
+};
 
 export type UpdateRunningGameAction = {
-    type: ActionType.UPDATE_RUNNING_GAME
-    payload?: string
-}
+    type: ActionType.UPDATE_RUNNING_GAME;
+    payload?: string;
+};
 
 export type UpdateGuideAction = {
-    type: ActionType.UPDATE_GUIDE
-    payload: Guide
-}
+    type: ActionType.UPDATE_GUIDE;
+    payload: GuideContents;
+};
 
 export type BackAction = {
-    type: ActionType.BACK
-}
+    type: ActionType.BACK;
+};
 
 export type BackToStateAction = {
-    type: ActionType.BACK_TO_STATE
-    payload: PluginState
-}
+    type: ActionType.BACK_TO_STATE;
+    payload: PluginState;
+};
+export type UpdateDarkModeAction = {
+    type: ActionType.UPDATE_DARK_MODE;
+    payload: boolean;
+};
 
 export const appReducer = (state: TAppState, action: AppActions): TAppState => {
     switch (action.type) {
@@ -67,60 +73,65 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
             return {
                 ...state,
                 pluginState: action.payload,
-            }
+            };
         case ActionType.UPDATE_GAMES:
             return {
                 ...state,
                 games: action.payload.games,
                 runningGame: action.payload.runningGame,
                 pluginState: 'games',
-            }
+            };
         case ActionType.UPDATE_RESULTS:
             return {
                 ...state,
                 searchResults: action.payload,
                 pluginState: 'results',
-            }
+            };
         case ActionType.UPDATE_GUIDES:
             return {
                 ...state,
                 guides: action.payload,
                 pluginState: 'guides',
-            }
+            };
         case ActionType.UPDATE_RUNNING_GAME:
             return {
                 ...state,
                 runningGame: action.payload,
-            }
+            };
         case ActionType.UPDATE_GUIDE:
             return {
                 ...state,
                 currentGuide: action.payload,
                 pluginState: 'guide',
-            }
+            };
         case ActionType.BACK:
-            let newPluginState: PluginState = 'games'
+            let newPluginState: PluginState = 'games';
             switch (state.pluginState) {
                 case 'guides':
-                    newPluginState = 'results'
-                    break
+                    newPluginState = 'results';
+                    break;
                 case 'guide':
-                    newPluginState = 'guides'
-                    break
+                    newPluginState = 'guides';
+                    break;
                 default:
-                    newPluginState = 'games'
-                    break
+                    newPluginState = 'games';
+                    break;
             }
             return {
                 ...state,
                 pluginState: newPluginState,
-            }
+            };
         case ActionType.BACK_TO_STATE:
             return {
                 ...state,
                 pluginState: action.payload,
-            }
+            };
+        case ActionType.UPDATE_DARK_MODE:
+            return {
+                ...state,
+                darkMode: action.payload,
+            };
         default:
-            return state
+            return state;
     }
-}
+};

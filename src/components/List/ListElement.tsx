@@ -1,11 +1,11 @@
-import { PanelSectionRow, ButtonItem } from 'decky-frontend-lib'
-import React, { useCallback } from 'react'
+import { PanelSectionRow, ButtonItem } from 'decky-frontend-lib';
+import React, { useCallback } from 'react';
 
 type ListElementProps = {
-    displayText: string
-    value: string
-    onClick: (text: string) => void
-}
+    displayText: string;
+    value: string;
+    onClick: (text: string) => void;
+};
 
 export const ListElement = ({
     displayText,
@@ -13,8 +13,8 @@ export const ListElement = ({
     onClick,
 }: ListElementProps) => {
     const handleClick = useCallback(() => {
-        onClick(value)
-    }, [value])
+        onClick(value);
+    }, [value]);
 
     return (
         <PanelSectionRow>
@@ -22,5 +22,5 @@ export const ListElement = ({
                 {displayText}
             </ButtonItem>
         </PanelSectionRow>
-    )
-}
+    );
+};
