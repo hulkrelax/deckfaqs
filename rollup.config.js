@@ -34,6 +34,6 @@ export default defineConfig({
         },
         format: 'iife',
         exports: 'default',
-        //plugins: [terser()]
+        plugins: [terser()]
     },
 });
