@@ -1,6 +1,6 @@
 ### DeckFAQs, a GameFAQs browser for the Steam Deck (v1.1.1)
 
--   *BUGFIX*: state issue between fullscreen and sidepanel fixed
+-   _BUGFIX_: state issue between fullscreen and sidepanel fixed
 -   Renders guide directly in side panel instead of through iframes
 -   Scrolling to anchor points in HTML guides added
 -   Adds Table of Contents for HTML based guides
