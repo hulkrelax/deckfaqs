@@ -27,11 +27,11 @@ export const ResultList = ({ serverApi }: DefaultProps) => {
             (result: string) => {
                 const body = result;
                 const faqs = Array.from(body.matchAll(faqsNightmareRegex));
-                // sort by recommended
-                faqs.sort((a, _b) => {
-                    if (a[3] == 'rec') return -1;
-                    return 1;
-                });
+                // // sort by recommended
+                // faqs.sort((a, _b) => {
+                //     if (a[3] == 'rec') return -1;
+                //     return 1;
+                // });
                 for (const faq of faqs) {
                     const faqUrl = faq[1],
                         title = faq[2],
