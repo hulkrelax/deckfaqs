@@ -1,18 +1,9 @@
-import {
-    ButtonItem,
-    PanelSection,
-    PanelSectionRow,
-    ServerAPI,
-} from 'decky-frontend-lib';
+import { ButtonItem, PanelSection, PanelSectionRow } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
-import { getContent } from '../../utils';
+import { DefaultProps, getContent } from '../../utils';
 import { List, ListItem } from './List';
-
-type GameListProps = {
-    serverApi: ServerAPI;
-};
 
 type SearchResult = {
     product_name: string | undefined;
@@ -20,7 +11,7 @@ type SearchResult = {
     url: string | undefined;
 };
 
-export const GameList = ({ serverApi }: GameListProps) => {
+export const GameList = ({ serverApi }: DefaultProps) => {
     const search = async (game: string) => {
         game = game.replace(' ', '+');
         const searchUrl = `https://gamefaqs.gamespot.com/ajax/home_game_search?term=${game}`;

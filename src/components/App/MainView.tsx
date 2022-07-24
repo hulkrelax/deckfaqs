@@ -1,16 +1,12 @@
-import { ServerAPI } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
 import { AppContext } from '../../context/AppContext';
+import { DefaultProps } from '../../utils';
 import { Guide } from '../Guide/Guide';
 import { GameList } from '../List/GameList';
 import { GuideList } from '../List/GuideList';
 import { ResultList } from '../List/ResultList';
 
-type MainProps = {
-    serverApi: ServerAPI;
-};
-
-export const MainView = ({ serverApi }: MainProps) => {
+export const MainView = ({ serverApi }: DefaultProps) => {
     const {
         state: { pluginState },
     } = useContext(AppContext);

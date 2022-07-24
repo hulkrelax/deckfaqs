@@ -1,19 +1,16 @@
 import React, { useEffect, useContext, useRef } from 'react';
 import { ListItem } from '../List/List';
-import { ServerAPI, Router } from 'decky-frontend-lib';
+import { Router } from 'decky-frontend-lib';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
 import { ignoreNonSteam, ignoreSteam } from '../../constants';
 import { Nav } from '../Nav/Nav';
 import { MainView } from './MainView';
-
-type AppProps = {
-    serverApi: ServerAPI;
-};
+import { DefaultProps } from '../../utils';
 
 // This used to use css modules, but with the way the new React Based router works,
 // I have yet to figure out how to import css properly
-export const App = ({ serverApi }: AppProps) => {
+export const App = ({ serverApi }: DefaultProps) => {
     const {
         state: { pluginState },
         dispatch,
@@ -127,13 +124,7 @@ export const App = ({ serverApi }: AppProps) => {
             onGameActionStart.unregister();
         };
     }, []);
-
-    // I'm sure there is a more elegant way to do this but I don't have time for that :smile:
-    //let mainHeight = 'calc(100% - 88px)';
-
-    // if (pluginState === 'games') {
-    //     mainHeight = runningGame ? 'calc(100% - 110px)' : 'calc(100% - 28px)';
-    // }
+    
     return (
         <div
             style={{

@@ -1,15 +1,10 @@
-import { ServerAPI } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
 import { AppContext, TableOfContentEntry } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
 import { List } from './List';
-import { getGuideHtml } from '../../utils';
+import { DefaultProps, getGuideHtml } from '../../utils';
 
-type GuideListProps = {
-    serverApi: ServerAPI;
-};
-
-export const GuideList = ({ serverApi }: GuideListProps) => {
+export const GuideList = ({ serverApi }: DefaultProps) => {
     const {
         state: { guides },
         dispatch,

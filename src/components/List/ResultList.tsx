@@ -1,17 +1,11 @@
-// import { ButtonItem, PanelSection, PanelSectionRow } from 'decky-frontend-lib'
-import { ServerAPI } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
 import { faqsNightmareRegex } from '../../constants';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
-import { getContent } from '../../utils';
+import { DefaultProps, getContent } from '../../utils';
 import { List, ListItem } from './List';
 
-type ResultListProps = {
-    serverApi: ServerAPI;
-};
-
-export const ResultList = ({ serverApi }: ResultListProps) => {
+export const ResultList = ({ serverApi }: DefaultProps) => {
     const {
         state: { searchResults },
         dispatch,
