@@ -5,7 +5,6 @@ import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'rollup';
 import importAssets from 'rollup-plugin-import-assets';
-import { terser } from 'rollup-plugin-terser';
 
 import { name } from './plugin.json';
 
@@ -33,7 +32,6 @@ export default defineConfig({
             'react-dom': 'SP_REACTDOM',
         },
         format: 'iife',
-        exports: 'default',
-        plugins: [terser()]
+        exports: 'default'
     },
 });
