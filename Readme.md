@@ -48,6 +48,10 @@ DeckFAQs supports both rich-text and plain-text guides from GameFAQs. Rich-text 
 
 ![](images/005_plain.png)
 
+### Fullscreen Guide
+
+![](images/006_fullscreen.png)
+
 ## Known Issues
 
 -   It is possible that some non-game games (thins like Chrome) will show up in your list of games. I have a filter to remove some obvious non-games but the list is non-exhaustive. We can always expand the filter to remove them over time. In any case, it doesn't really break anything as far as I know and hopefully you have more games than non-games :smile:
