@@ -23,6 +23,7 @@ export type TAppState = {
     searchResults: ListItem[];
     guides: ListItem[];
     runningGame?: string;
+    darkMode: boolean;
     currentGuide?: GuideContents;
 };
 
@@ -38,6 +39,7 @@ export const initialState: TAppState = {
     guides: [],
     runningGame: undefined,
     currentGuide: undefined,
+    darkMode: false,
 };
 
 export const AppContext = createContext<TAppContext>({

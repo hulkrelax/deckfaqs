@@ -10,6 +10,7 @@ export enum ActionType {
     UPDATE_GUIDE,
     BACK,
     BACK_TO_STATE,
+    UPDATE_DARK_MODE,
 }
 
 export type AppActions =
@@ -20,7 +21,8 @@ export type AppActions =
     | UpdateRunningGameAction
     | UpdateGuideAction
     | BackAction
-    | BackToStateAction;
+    | BackToStateAction
+    | UpdateDarkModeAction;
 
 export type UpdatePluginStateAction = {
     type: ActionType.UPDATE_PLUGIN_STATE;
@@ -59,6 +61,10 @@ export type BackAction = {
 export type BackToStateAction = {
     type: ActionType.BACK_TO_STATE;
     payload: PluginState;
+};
+export type UpdateDarkModeAction = {
+    type: ActionType.UPDATE_DARK_MODE;
+    payload: boolean;
 };
 
 export const appReducer = (state: TAppState, action: AppActions): TAppState => {
@@ -119,6 +125,11 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
             return {
                 ...state,
                 pluginState: action.payload,
+            };
+        case ActionType.UPDATE_DARK_MODE:
+            return {
+                ...state,
+                darkMode: action.payload,
             };
         default:
             return state;

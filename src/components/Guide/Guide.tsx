@@ -3,7 +3,6 @@ import {
   Focusable,
   QuickAccessTab,
   Router,
-  ServerAPI,
 } from 'decky-frontend-lib';
 import React, { useContext, useMemo, useRef } from 'react';
 import { useEffect } from 'react';
@@ -11,7 +10,6 @@ import {
   AppContext,
   AppContextProvider,
   GuideContents,
-  TAppState,
 } from '../../context/AppContext';
 import parse, {
   HTMLReactParserOptions,
@@ -180,12 +178,17 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
       serverApi
           .injectCssIntoTab(
               !fullscreen ? 'QuickAccess' : 'SP',
-              `body {
-                color: #000;
+              `
+              .deckfaqs_dark {
+                filter: invert(1)
+              }
+              .deckfaqs_dark img:not(.ignore-color-scheme),video:not(.ignore-color-scheme) {
+                filter: brightness(50%) invert(100%);
               }
               .ffaq {
                 font-size: 14px;
                 word-wrap: break-word;
+                color: #000;
               }
               .ffaq p {
                 line-height: 20px;
@@ -548,6 +551,7 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                   overflow: 'auto',
                   height: '100%',
               }}
+              className={state.darkMode ? "deckfaqs_dark" : ''}
               ref={guideDiv}
           >
               {parse(currentGuide?.guideHtml ?? '', options)}
