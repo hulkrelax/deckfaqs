@@ -124,7 +124,7 @@ export const App = ({ serverApi }: DefaultProps) => {
             onGameActionStart.unregister();
         };
     }, []);
-    
+
     return (
         <div
             style={{
