@@ -4,10 +4,15 @@ import { AppActions, appReducer } from '../reducers/AppReducer';
 
 export type PluginState = 'games' | 'results' | 'guides' | 'guide';
 
+export type TableOfContentEntry = {
+    data: any;
+    label: string;
+};
+
 export type GuideContents = {
     guideUrl?: string;
     guideHtml?: string;
-    guideToc?: Array<any>;
+    guideToc?: Array<TableOfContentEntry>;
     currentTocSection?: any;
     anchor?: string;
 };

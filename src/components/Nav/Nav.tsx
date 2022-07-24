@@ -80,13 +80,19 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                 style={{ minWidth: '0px' }}
                                 onClick={() => {
                                     Router.CloseSideMenus();
-                                    Router.Navigate('/deckfaqs-fullscreen');
+                                    setTimeout(
+                                        () =>
+                                            Router.Navigate(
+                                                '/deckfaqs-fullscreen'
+                                            ),
+                                        100
+                                    );
                                 }}
                             >
                                 <BsArrowsFullscreen />
                             </DialogButton>
                         </div>
-                        {currentGuide?.guideToc && (
+                        {currentGuide!.guideToc!.length > 0 && (
                             <TocDropdown
                                 style={childStyle}
                                 serverApi={serverApi}

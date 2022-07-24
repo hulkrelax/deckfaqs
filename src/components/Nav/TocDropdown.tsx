@@ -22,7 +22,7 @@ export const TocDropdown = ({ serverApi, style }: TocDropdownProps) => {
             anchor = path.substring(1);
             dispatch({
                 type: ActionType.UPDATE_GUIDE,
-                payload: { ...currentGuide, anchor },
+                payload: { ...currentGuide, anchor, currentTocSection: path },
             });
         } else {
             getGuideHtml(href, serverApi, (result: string) => {

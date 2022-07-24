@@ -143,7 +143,7 @@ export const App = ({ serverApi }: AppProps) => {
                 flexFlow: 'column',
             }}
         >
-            <Nav serverApi={serverApi}/>
+            <Nav serverApi={serverApi} />
             <div ref={mainDiv} style={{ flexGrow: '1', overflow: 'auto' }}>
                 <MainView serverApi={serverApi} />
             </div>
