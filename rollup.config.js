@@ -32,6 +32,6 @@ export default defineConfig({
             'react-dom': 'SP_REACTDOM',
         },
         format: 'iife',
-        exports: 'default'
+        exports: 'default',
     },
 });

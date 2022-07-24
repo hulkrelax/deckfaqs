@@ -13,7 +13,6 @@ export const TocDropdown = ({ serverApi, style }: TocDropdownProps) => {
         state: { currentGuide },
         dispatch,
     } = useContext(AppContext);
-
     const handleTOCChange = (data: any) => {
         const path: string = data.data;
         let anchor: string | undefined = undefined;

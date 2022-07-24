@@ -1,184 +1,170 @@
 import {
-  DialogButton,
-  Focusable,
-  QuickAccessTab,
-  Router,
+    DialogButton,
+    Focusable,
+    QuickAccessTab,
+    Router,
 } from 'decky-frontend-lib';
 import React, { useContext, useMemo, useRef } from 'react';
 import { useEffect } from 'react';
 import {
-  AppContext,
-  AppContextProvider,
-  GuideContents,
+    AppContext,
+    AppContextProvider,
+    GuideContents,
 } from '../../context/AppContext';
 import parse, {
-  HTMLReactParserOptions,
-  Element,
-  domToReact,
+    HTMLReactParserOptions,
+    Element,
+    domToReact,
 } from 'html-react-parser';
 import { ActionType } from '../../reducers/AppReducer';
 import { DefaultProps, getGuideHtml } from '../../utils';
 import { TocDropdown } from '../Nav/TocDropdown';
 
 type GuideProps = DefaultProps & {
-  fullscreen?: boolean;
+    fullscreen?: boolean;
 };
 
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
-  const { state, dispatch } = useContext(AppContext);
-  const { currentGuide } = state;
-  const guideDiv = useRef<HTMLDivElement>(null);
+    const { state, dispatch } = useContext(AppContext);
+    const { currentGuide } = state;
+    const guideDiv = useRef<HTMLDivElement>(null);
+    const stateRef = useRef(state);
 
-  const options: HTMLReactParserOptions = {
-      replace: (domNode) => {
-          if (
-              domNode instanceof Element &&
-              domNode.name === 'a' &&
-              domNode.attribs &&
-              domNode.attribs.href
-          ) {
-              const children = domNode.children;
-              let anchor = '';
-              if (domNode.attribs.href.startsWith('#')) {
-                  anchor = domNode.attribs.href.substring(1);
-                  return (
-                      <a
-                          {...domNode.attribs}
-                          onClick={(e) => {
-                              e.preventDefault();
-                              dispatch({
-                                  type: ActionType.UPDATE_GUIDE,
-                                  payload: { ...currentGuide, anchor },
-                              });
-                          }}
-                      >
-                          {domToReact(children)}
-                      </a>
-                  );
-              } else {
-                  anchor = domNode.attribs.href;
-                  return (
-                      <a
-                          {...domNode.attribs}
-                          onClick={(e) => {
-                              e.preventDefault();
-                              const baseUrl = currentGuide?.guideUrl ?? '';
-                              getGuideHtml(
-                                  `${baseUrl}/${anchor}`,
-                                  serverApi,
-                                  (result: string) => {
-                                      if (anchor.indexOf('#') > 0) {
-                                          anchor = anchor.substring(
-                                              anchor.indexOf('#') + 1
-                                          );
-                                      } else {
-                                          anchor = '';
-                                      }
-                                      dispatch({
-                                          type: ActionType.UPDATE_GUIDE,
-                                          payload: {
-                                              ...currentGuide,
-                                              guideHtml: result,
-                                              anchor,
-                                          },
-                                      });
-                                  }
-                              );
-                          }}
-                      >
-                          {domToReact(children)}
-                      </a>
-                  );
-              }
-          } else if (
-              domNode instanceof Element &&
-              domNode.name === 'div' &&
-              domNode.attribs &&
-              domNode.attribs.class === 'ftoc'
-          ) {
-              return <span></span>;
-          } else if (
-              domNode instanceof Element &&
-              domNode.name === 'img' &&
-              domNode.attribs &&
-              domNode.attribs.src
-          ) {
-              return (
-                  <img
-                      {...domNode.attribs}
-                      src={`https://gamefaqs.gamespot.com${domNode.attribs.src}`}
-                  />
-              );
-          }
-          return domNode;
-      },
-  };
+    useEffect(() => {
+        stateRef.current = state;
+    }, [state]);
 
-  useEffect(() => {
-      const anchor = state.currentGuide?.anchor;
-      scrollToAnchor(anchor);
-  }, [state.currentGuide?.anchor, state.currentGuide?.guideHtml]);
+    const options: HTMLReactParserOptions = {
+        replace: (domNode) => {
+            if (
+                domNode instanceof Element &&
+                domNode.name === 'a' &&
+                domNode.attribs &&
+                domNode.attribs.href
+            ) {
+                const children = domNode.children;
+                let anchor = '';
+                if (domNode.attribs.href.startsWith('#')) {
+                    anchor = domNode.attribs.href.substring(1);
+                    return (
+                        <a
+                            {...domNode.attribs}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                dispatch({
+                                    type: ActionType.UPDATE_GUIDE,
+                                    payload: { ...currentGuide, anchor },
+                                });
+                            }}
+                        >
+                            {domToReact(children)}
+                        </a>
+                    );
+                } else {
+                    anchor = domNode.attribs.href;
+                    return (
+                        <a
+                            {...domNode.attribs}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                const baseUrl = currentGuide?.guideUrl ?? '';
+                                getGuideHtml(
+                                    `${baseUrl}/${anchor}`,
+                                    serverApi,
+                                    (result: string) => {
+                                        if (anchor.indexOf('#') > 0) {
+                                            anchor = anchor.substring(
+                                                anchor.indexOf('#') + 1
+                                            );
+                                        } else {
+                                            anchor = '';
+                                        }
+                                        dispatch({
+                                            type: ActionType.UPDATE_GUIDE,
+                                            payload: {
+                                                ...currentGuide,
+                                                guideHtml: result,
+                                                anchor,
+                                            },
+                                        });
+                                    }
+                                );
+                            }}
+                        >
+                            {domToReact(children)}
+                        </a>
+                    );
+                }
+            } else if (
+                domNode instanceof Element &&
+                domNode.name === 'div' &&
+                domNode.attribs &&
+                domNode.attribs.class === 'ftoc'
+            ) {
+                return <span></span>;
+            } else if (
+                domNode instanceof Element &&
+                domNode.name === 'img' &&
+                domNode.attribs &&
+                domNode.attribs.src
+            ) {
+                return (
+                    <img
+                        {...domNode.attribs}
+                        src={`https://gamefaqs.gamespot.com${domNode.attribs.src}`}
+                    />
+                );
+            }
+            return domNode;
+        },
+    };
 
-  const handleDismiss = (updatedGuide: GuideContents) => {
-      dispatch({
-          type: ActionType.UPDATE_GUIDE,
-          payload: updatedGuide,
-      });
-  };
-  const scrollToAnchor = (anchor: string = '') => {
-      if (anchor.length > 0) {
-          const elementToScrollTo =
-              guideDiv.current?.querySelector(`[name="${anchor}"]`) ??
-              guideDiv.current?.querySelector(`[id="${anchor}"]`);
-          if (elementToScrollTo) {
-              elementToScrollTo.scrollIntoView();
-          } else {
-              const baseUrl = currentGuide?.guideUrl ?? '';
-              getGuideHtml(
-                  `${baseUrl}/#${anchor}`,
-                  serverApi,
-                  (result: string) => {
-                      dispatch({
-                          type: ActionType.UPDATE_GUIDE,
-                          payload: {
-                              ...currentGuide,
-                              guideHtml: result,
-                              anchor,
-                          },
-                      });
-                  }
-              );
-          }
-      } else {
-          guideDiv.current?.querySelector('#faqwrap')?.scrollIntoView();
-      }
-  };
+    useEffect(() => {
+        const anchor = state.currentGuide?.anchor;
+        scrollToAnchor(anchor);
+    }, [state.currentGuide?.anchor, state.currentGuide?.guideHtml]);
 
-  useEffect(() => {
-      if (!fullscreen) {
-          serverApi.routerHook.addRoute('/deckfaqs-fullscreen', () => {
-              return (
-                  <AppContextProvider incomingState={state}>
-                      <FullScreenGuide
-                          serverApi={serverApi}
-                          onDismiss={handleDismiss}
-                      />
-                  </AppContextProvider>
-              );
-          });
-      }
-      return function cleanup() {
-          if (!fullscreen)
-              serverApi.routerHook.removeRoute('/deckfaqs-fullscreen');
-      };
-  }, [state]);
+    const handleDismiss = (updatedGuide: GuideContents) => {
+        dispatch({
+            type: ActionType.UPDATE_GUIDE,
+            payload: updatedGuide,
+        });
+    };
+    const scrollToAnchor = (anchor: string = '') => {
+        if (anchor.length > 0) {
+            const elementToScrollTo =
+                guideDiv.current?.querySelector(`[name="${anchor}"]`) ??
+                guideDiv.current?.querySelector(`[id="${anchor}"]`);
+            if (elementToScrollTo) {
+                elementToScrollTo.scrollIntoView();
+            } else {
+                const baseUrl = currentGuide?.guideUrl ?? '';
+                getGuideHtml(
+                    `${baseUrl}/#${anchor}`,
+                    serverApi,
+                    (result: string) => {
+                        dispatch({
+                            type: ActionType.UPDATE_GUIDE,
+                            payload: {
+                                ...currentGuide,
+                                guideHtml: result,
+                                anchor,
+                            },
+                        });
+                    }
+                );
+            }
+        } else {
+            guideDiv.current?.querySelector('#faqwrap')?.scrollIntoView();
+        }
+    };
 
-  let cssId: any = '';
-  useEffect(() => {
-      serverApi
-          .injectCssIntoTab(
-              !fullscreen ? 'QuickAccess' : 'SP',
-              `
+    let cssId: any = '';
+    useEffect(() => {
+        serverApi
+            .injectCssIntoTab(
+                !fullscreen ? 'QuickAccess' : 'SP',
+                `
               .deckfaqs_dark {
                 filter: invert(1)
               }
@@ -528,117 +514,132 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                 max-width: 100%;
                 width: 100%;
               }`
-          )
-          .then((response) => {
-              if (response.success) cssId = response.result;
-              scrollToAnchor(currentGuide?.anchor)
-          });
+            )
+            .then((response) => {
+                if (response.success) cssId = response.result;
+                scrollToAnchor(currentGuide?.anchor);
+            });
 
-      return function cleanup() {
-          serverApi.removeCssFromTab(
-              !fullscreen ? 'QuickAccess' : 'SP',
-              cssId.result
-          );
-      };
-  }, []);
+        if (!fullscreen) {
+            serverApi.routerHook.addRoute('/deckfaqs-fullscreen', () => {
+                return (
+                    <AppContextProvider incomingState={stateRef.current}>
+                        <FullScreenGuide
+                            serverApi={serverApi}
+                            onDismiss={handleDismiss}
+                        />
+                    </AppContextProvider>
+                );
+            });
+        }
 
-  return useMemo(
-      () => (
-          <div
-              style={{
-                  flexGrow: '1',
-                  background: '#fff',
-                  overflow: 'auto',
-                  height: '100%',
-              }}
-              className={state.darkMode ? "deckfaqs_dark" : ''}
-              ref={guideDiv}
-          >
-              {parse(currentGuide?.guideHtml ?? '', options)}
-          </div>
-      ),
-      [currentGuide]
-  );
+        return function cleanup() {
+            serverApi.removeCssFromTab(
+                !fullscreen ? 'QuickAccess' : 'SP',
+                cssId.result
+            );
+            if (!fullscreen)
+                serverApi.routerHook.removeRoute('/deckfaqs-fullscreen');
+        };
+    }, []);
+
+    return useMemo(
+        () => (
+            <div
+                style={{
+                    flexGrow: '1',
+                    background: '#fff',
+                    overflow: 'auto',
+                    height: '100%',
+                }}
+                className={state.darkMode ? 'deckfaqs_dark' : ''}
+                ref={guideDiv}
+            >
+                {parse(currentGuide?.guideHtml ?? '', options)}
+            </div>
+        ),
+        [currentGuide]
+    );
 };
 
 const navButtonStyle = {
-  height: '40px',
-  width: '200px',
-  minWidth: '0',
-  padding: '10px 12px',
+    height: '40px',
+    width: '200px',
+    minWidth: '0',
+    padding: '10px 12px',
 };
 
 type FullScreenGuideProps = DefaultProps & {
-  onDismiss: (updatedGuide: GuideContents) => void;
+    onDismiss: (updatedGuide: GuideContents) => void;
 };
 const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
-  const { state } = useContext(AppContext);
-  const guide = useRef(state.currentGuide);
+    const { state } = useContext(AppContext);
+    const guide = useRef(state.currentGuide);
 
-  useEffect(() => {
-      guide.current = state.currentGuide;
-  }, [state.currentGuide]);
+    useEffect(() => {
+        guide.current = state.currentGuide;
+    }, [state.currentGuide]);
 
-  useEffect(() => {
-      return function cleanup() {
-          guide.current && onDismiss(guide.current);
-      };
-  }, []);
-  return (
-      <div
-          style={{
-              display: 'flex',
-              flexFlow: 'column',
-              marginTop: '50px',
-              flexGrow: '1',
-              overflow: 'auto',
-              color: '#000',
-          }}
-      >
-          <div
-              style={{
-                  marginBottom: '10px',
-                  marginLeft: '10px',
-                  marginRight: '10px',
-                  display: 'flex',
-              }}
-          >
-              <Focusable style={{ display: 'flex' }}>
-                  {Router.MainRunningApp !== undefined && (
-                      <DialogButton
-                          style={{ ...navButtonStyle, marginRight: '10px' }}
-                          onClick={() => {
-                              Router.NavigateBackOrOpenMenu();
-                              setTimeout(
-                                  () => Router.NavigateToRunningApp(),
-                                  200
-                              );
-                          }}
-                      >
-                          Back to Game
-                      </DialogButton>
-                  )}
-                  <DialogButton
-                      style={{ ...navButtonStyle, marginRight: '10px' }}
-                      onClick={() => {
-                          Router.NavigateBackOrOpenMenu();
-                          setTimeout(
-                              () =>
-                                  Router.OpenQuickAccessMenu(
-                                      QuickAccessTab.Decky
-                                  ),
-                              200
-                          );
-                      }}
-                  >
-                      Back to DeckFAQs
-                  </DialogButton>
-                  {state.currentGuide!.guideToc!.length > 0 && (
-                      <TocDropdown serverApi={serverApi} />
-                  )}
-              </Focusable>
-          </div>
-          <Guide fullscreen={true} serverApi={serverApi} />
-      </div>
-  );
+    useEffect(() => {
+        return function cleanup() {
+            guide.current && onDismiss(guide.current);
+        };
+    }, []);
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexFlow: 'column',
+                marginTop: '50px',
+                flexGrow: '1',
+                overflow: 'auto',
+                color: '#000',
+            }}
+        >
+            <div
+                style={{
+                    marginBottom: '10px',
+                    marginLeft: '10px',
+                    marginRight: '10px',
+                    display: 'flex',
+                }}
+            >
+                <Focusable style={{ display: 'flex' }}>
+                    {Router.MainRunningApp !== undefined && (
+                        <DialogButton
+                            style={{ ...navButtonStyle, marginRight: '10px' }}
+                            onClick={() => {
+                                Router.NavigateBackOrOpenMenu();
+                                setTimeout(
+                                    () => Router.NavigateToRunningApp(),
+                                    200
+                                );
+                            }}
+                        >
+                            Back to Game
+                        </DialogButton>
+                    )}
+                    <DialogButton
+                        style={{ ...navButtonStyle, marginRight: '10px' }}
+                        onClick={() => {
+                            Router.NavigateBackOrOpenMenu();
+                            setTimeout(
+                                () =>
+                                    Router.OpenQuickAccessMenu(
+                                        QuickAccessTab.Decky
+                                    ),
+                                200
+                            );
+                        }}
+                    >
+                        Back to DeckFAQs
+                    </DialogButton>
+                    {state.currentGuide!.guideToc!.length > 0 && (
+                        <TocDropdown serverApi={serverApi} />
+                    )}
+                </Focusable>
+            </div>
+            <Guide fullscreen={true} serverApi={serverApi} />
+        </div>
+    );
 };
