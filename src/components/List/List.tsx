@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AppContext } from '../../context/AppContext';
 import { ListElement } from './ListElement';
 
 export type ListItem = {
@@ -13,7 +14,17 @@ export type ListProps = {
 };
 
 export const List = ({ data, header, handleClick }: ListProps) => {
-    return (
+    const {
+        state: { isLoading },
+    } = useContext(AppContext);
+    return isLoading ? (
+        <div className="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    ) : (
         <div style={{ height: '100%' }}>
             <div
                 style={{

@@ -24,6 +24,7 @@ export type TAppState = {
     guides: ListItem[];
     runningGame?: string;
     darkMode: boolean;
+    isLoading: boolean;
     currentGuide?: GuideContents;
 };
 
@@ -40,6 +41,7 @@ export const initialState: TAppState = {
     runningGame: undefined,
     currentGuide: undefined,
     darkMode: false,
+    isLoading: false,
 };
 
 export const AppContext = createContext<TAppContext>({

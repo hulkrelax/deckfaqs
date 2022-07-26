@@ -11,6 +11,7 @@ export enum ActionType {
     BACK,
     BACK_TO_STATE,
     UPDATE_DARK_MODE,
+    UPDATE_LOADING,
 }
 
 export type AppActions =
@@ -22,11 +23,22 @@ export type AppActions =
     | UpdateGuideAction
     | BackAction
     | BackToStateAction
-    | UpdateDarkModeAction;
+    | UpdateDarkModeAction
+    | UpdateLoadingAction;
+
+export type UpdateLoadingAction = {
+    type: ActionType.UPDATE_LOADING;
+    payload: boolean;
+};
+
+type UpdatePluginState = {
+    pluginState: PluginState;
+    isLoading: boolean;
+};
 
 export type UpdatePluginStateAction = {
     type: ActionType.UPDATE_PLUGIN_STATE;
-    payload: PluginState;
+    payload: UpdatePluginState;
 };
 
 export type UpdateResultsAction = {
@@ -72,7 +84,7 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
         case ActionType.UPDATE_PLUGIN_STATE:
             return {
                 ...state,
-                pluginState: action.payload,
+                ...action.payload,
             };
         case ActionType.UPDATE_GAMES:
             return {
@@ -80,16 +92,19 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
                 games: action.payload.games,
                 runningGame: action.payload.runningGame,
                 pluginState: 'games',
+                isLoading: false,
             };
         case ActionType.UPDATE_RESULTS:
             return {
                 ...state,
+                isLoading: false,
                 searchResults: action.payload,
                 pluginState: 'results',
             };
         case ActionType.UPDATE_GUIDES:
             return {
                 ...state,
+                isLoading: false,
                 guides: action.payload,
                 pluginState: 'guides',
             };
@@ -101,6 +116,7 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
         case ActionType.UPDATE_GUIDE:
             return {
                 ...state,
+                isLoading: false,
                 currentGuide: action.payload,
                 pluginState: 'guide',
             };
@@ -120,16 +136,24 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
             return {
                 ...state,
                 pluginState: newPluginState,
+                currentGuide: undefined,
+                isLoading: false,
             };
         case ActionType.BACK_TO_STATE:
             return {
                 ...state,
                 pluginState: action.payload,
+                isLoading: false,
             };
         case ActionType.UPDATE_DARK_MODE:
             return {
                 ...state,
                 darkMode: action.payload,
+            };
+        case ActionType.UPDATE_LOADING:
+            return {
+                ...state,
+                isLoading: action.payload,
             };
         default:
             return state;

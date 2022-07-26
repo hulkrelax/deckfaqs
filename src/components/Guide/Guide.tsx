@@ -26,7 +26,7 @@ type GuideProps = DefaultProps & {
 
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     const { state, dispatch } = useContext(AppContext);
-    const { currentGuide } = state;
+    const { currentGuide, isLoading } = state;
     const guideDiv = useRef<HTMLDivElement>(null);
     const stateRef = useRef(state);
 
@@ -544,21 +544,29 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     }, []);
 
     return useMemo(
-        () => (
-            <div
-                style={{
-                    flexGrow: '1',
-                    background: '#fff',
-                    overflow: 'auto',
-                    height: '100%',
-                }}
-                className={state.darkMode ? 'deckfaqs_dark' : ''}
-                ref={guideDiv}
-            >
-                {parse(currentGuide?.guideHtml ?? '', options)}
-            </div>
-        ),
-        [currentGuide]
+        () =>
+            isLoading ? (
+                <div className="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            ) : (
+                <div
+                    style={{
+                        flexGrow: '1',
+                        background: '#fff',
+                        overflow: 'auto',
+                        height: '100%',
+                    }}
+                    className={state.darkMode ? 'deckfaqs_dark' : ''}
+                    ref={guideDiv}
+                >
+                    {parse(currentGuide?.guideHtml ?? '', options)}
+                </div>
+            ),
+        [currentGuide, isLoading]
     );
 };
 
@@ -634,9 +642,10 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                     >
                         Back to DeckFAQs
                     </DialogButton>
-                    {state.currentGuide!.guideToc!.length > 0 && (
-                        <TocDropdown serverApi={serverApi} />
-                    )}
+                    {state.currentGuide &&
+                        state.currentGuide.guideToc!.length > 0 && (
+                            <TocDropdown serverApi={serverApi} />
+                        )}
                 </Focusable>
             </div>
             <Guide fullscreen={true} serverApi={serverApi} />
