@@ -24,6 +24,11 @@ declare namespace SteamClient {
         CreatePopup(): any;
         Destroy(e: any): void;
     };
+
+    const Storage: {
+        GetJSON(key: string): Promise<string>;
+        SetObject(key: string, value: {}): Promise<void>;
+    };
 }
 
 declare const enum DisplayStatus {

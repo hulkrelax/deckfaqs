@@ -26,7 +26,7 @@ TBA
 
 ## Features
 
-DeckFAQs supports both rich-text and plain-text guides from GameFAQs. Rich-text guides are displayed in an iframe while plain-text guides are rendered directly in the side-panel
+DeckFAQs supports both rich-text and plain-text guides from GameFAQs.
 
 ### Game List
 

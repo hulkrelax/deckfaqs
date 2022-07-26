@@ -10,15 +10,24 @@ import { DefaultProps, loadingStyle } from '../../utils';
 
 // This used to use css modules, but with the way the new React Based router works,
 // I have yet to figure out how to import css properly
+
+const SETTINGS = 'deckfaqs_settings';
+
 export const App = ({ serverApi }: DefaultProps) => {
     const {
-        state: { pluginState },
+        state: { pluginState, darkMode },
         dispatch,
     } = useContext(AppContext);
     const mainDiv = useRef<HTMLDivElement>(null);
     useEffect(() => {
         mainDiv.current?.scrollTo({ top: 0 });
     }, [pluginState]);
+
+    useEffect(() => {
+        return function cleanup() {
+            SteamClient.Storage.SetObject(SETTINGS, { darkMode });
+        };
+    }, [darkMode]);
 
     // This would work for Steam games but does not for non-steam games so we just use this for cleraing the running game
     const handleSteamAppStateChange = ({ bRunning }: AppState) => {
@@ -115,6 +124,21 @@ export const App = ({ serverApi }: DefaultProps) => {
                 payload: { games, runningGame },
             });
         });
+
+        SteamClient.Storage.GetJSON(SETTINGS)
+            .then((result) => {
+                const settings: { darkMode: boolean } = JSON.parse(result);
+                dispatch({
+                    type: ActionType.UPDATE_DARK_MODE,
+                    payload: settings.darkMode,
+                });
+            })
+            .catch(() => {
+                dispatch({
+                    type: ActionType.UPDATE_DARK_MODE,
+                    payload: false,
+                });
+            });
 
         const onAppStateChange =
             SteamClient.GameSessions.RegisterForAppLifetimeNotifications(
