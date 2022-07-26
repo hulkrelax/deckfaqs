@@ -11,10 +11,14 @@ export const GuideList = ({ serverApi }: DefaultProps) => {
     } = useContext(AppContext);
 
     const openGuide = (url: string) => {
+        dispatch({
+            type: ActionType.UPDATE_PLUGIN_STATE,
+            payload: { pluginState: 'guide', isLoading: true },
+        });
         getGuideHtml(
             url,
             serverApi,
-            (result: string, toc: Array<TableOfContentEntry> | undefined) => {
+            (result: string, toc: Array<TableOfContentEntry>) => {
                 dispatch({
                     type: ActionType.UPDATE_GUIDE,
                     payload: {

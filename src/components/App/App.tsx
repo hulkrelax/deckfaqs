@@ -6,7 +6,7 @@ import { ActionType } from '../../reducers/AppReducer';
 import { ignoreNonSteam, ignoreSteam } from '../../constants';
 import { Nav } from '../Nav/Nav';
 import { MainView } from './MainView';
-import { DefaultProps } from '../../utils';
+import { DefaultProps, loadingStyle } from '../../utils';
 
 // This used to use css modules, but with the way the new React Based router works,
 // I have yet to figure out how to import css properly
@@ -55,6 +55,11 @@ export const App = ({ serverApi }: DefaultProps) => {
     };
 
     useEffect(() => {
+        dispatch({
+            type: ActionType.UPDATE_PLUGIN_STATE,
+            payload: { pluginState: 'games', isLoading: true },
+        });
+
         const getGames = async (): Promise<{
             games: ListItem[];
             runningGame?: string;
@@ -119,9 +124,16 @@ export const App = ({ serverApi }: DefaultProps) => {
         const onGameActionStart = SteamClient.Apps.RegisterForGameActionStart(
             handleGameActionStart
         );
+        let cssId: any = '';
+        serverApi
+            .injectCssIntoTab('QuickAccess', loadingStyle)
+            .then((response) => {
+                if (response.success) cssId = response.result;
+            });
         return function cleanup() {
             onAppStateChange.unregister();
             onGameActionStart.unregister();
+            serverApi.removeCssFromTab('QuickAccess', cssId.result);
         };
     }, []);
 

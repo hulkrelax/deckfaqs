@@ -101,12 +101,13 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                     <BsArrowsFullscreen />
                                 </DialogButton>
                             </div>
-                            {currentGuide!.guideToc!.length > 0 && (
-                                <TocDropdown
-                                    style={childStyle}
-                                    serverApi={serverApi}
-                                />
-                            )}
+                            {currentGuide &&
+                                currentGuide.guideToc!.length > 0 && (
+                                    <TocDropdown
+                                        style={childStyle}
+                                        serverApi={serverApi}
+                                    />
+                                )}
                         </Focusable>
                     )}
                 </div>
@@ -120,6 +121,6 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                     />
                 </div>
             ),
-        [pluginState, darkMode]
+        [pluginState, darkMode, currentGuide?.guideToc]
     );
 };
