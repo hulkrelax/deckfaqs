@@ -46,6 +46,7 @@ export const List = ({ data, header, handleClick }: ListProps) => {
                         onClick={handleClick}
                     />
                 ))}
+                {data.length == 0 && <p>No results</p>}
             </div>
         </div>
     );

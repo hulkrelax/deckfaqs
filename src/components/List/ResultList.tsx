@@ -30,16 +30,18 @@ export const ResultList = ({ serverApi }: DefaultProps) => {
             get_guides()`,
             (result: string) => {
                 const body = result;
-                const faqs = Array.from(body.matchAll(faqsNightmareRegex));
-                for (const faq of faqs) {
-                    const faqUrl = faq[1],
-                        title = faq[2],
-                        version = faq[4],
-                        date = faq[5];
-                    guides.push({
-                        url: `${url}${faqUrl}`,
-                        text: `${title} - ${version} - ${date}`,
-                    });
+                if (body) {
+                    const faqs = Array.from(body.matchAll(faqsNightmareRegex));
+                    for (const faq of faqs) {
+                        const faqUrl = faq[1],
+                            title = faq[2],
+                            version = faq[4],
+                            date = faq[5];
+                        guides.push({
+                            url: `${url}${faqUrl}`,
+                            text: `${title} - ${version} - ${date}`,
+                        });
+                    }
                 }
                 dispatch({
                     type: ActionType.UPDATE_GUIDES,
