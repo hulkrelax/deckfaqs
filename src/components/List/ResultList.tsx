@@ -25,6 +25,9 @@ export const ResultList = ({ serverApi }: DefaultProps) => {
                 let content = document.getElementsByClassName("guides")
                 if(content.length > 0)
                     return document.documentElement.outerHTML
+                let submitGuides = document.documentElement.innerText
+                if(submitGuides.includes("Want to Write Your Own Guide?"))
+                    return '<div></div>'
                 return undefined
             }
             get_guides()`,
