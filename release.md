@@ -1,5 +1,6 @@
-### DeckFAQs, a GameFAQs browser for the Steam Deck (v1.2.0)
+### DeckFAQs, a GameFAQs browser for the Steam Deck (v1.2.1)
 
+-   **BUGFIX** Fix an issue where guides in the list can get duplicated
 -   Loading indicator added when data is loading
 -   Renders guide directly in side panel instead of through iframes
 -   Scrolling to anchor points in HTML guides added
