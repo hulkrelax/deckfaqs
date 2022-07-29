@@ -12,7 +12,7 @@ export const ResultList = ({ serverApi }: DefaultProps) => {
     } = useContext(AppContext);
 
     const getGuides = async (url: string) => {
-        const guides: ListItem[] = [];
+        let guides: ListItem[] = [];
         const faqUrl = `${url}/faqs`;
         dispatch({
             type: ActionType.UPDATE_PLUGIN_STATE,
@@ -24,7 +24,7 @@ export const ResultList = ({ serverApi }: DefaultProps) => {
             `function get_guides() {
                 let content = document.getElementsByClassName("guides")
                 if(content.length > 0)
-                    return document.documentElement.outerHTML
+                    return document.documentElement.outerHTML;
                 let submitGuides = document.documentElement.innerText
                 if(submitGuides.includes("Want to Write Your Own Guide?"))
                     return '<div></div>'
@@ -33,6 +33,7 @@ export const ResultList = ({ serverApi }: DefaultProps) => {
             get_guides()`,
             (result: string) => {
                 const body = result;
+                guides = [];
                 if (body) {
                     const faqs = Array.from(body.matchAll(faqsNightmareRegex));
                     for (const faq of faqs) {
