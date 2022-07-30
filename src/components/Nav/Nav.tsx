@@ -10,6 +10,7 @@ import { FaHome } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
 import { DefaultProps } from '../../utils';
+import { Search } from './Search';
 import { TocDropdown } from './TocDropdown';
 
 export const Nav = ({ serverApi }: DefaultProps) => {
@@ -32,7 +33,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
 
     const navButtonStyle = {
         height: '40px',
-        width: '49%',
+        width: '33%',
         minWidth: '0',
         display: 'inline-block',
         verticalAlign: 'bottom',
@@ -40,7 +41,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
         margin: '0 auto',
     };
     const childStyle = {
-        maxWidth: '49%',
+        maxWidth: '33%',
         flexGrow: 1,
     };
     return useMemo(
@@ -102,12 +103,14 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                 </DialogButton>
                             </div>
                             {currentGuide &&
-                                currentGuide.guideToc!.length > 0 && (
-                                    <TocDropdown
-                                        style={childStyle}
-                                        serverApi={serverApi}
-                                    />
-                                )}
+                            currentGuide.guideToc!.length > 0 ? (
+                                <TocDropdown
+                                    style={childStyle}
+                                    serverApi={serverApi}
+                                />
+                            ) : (
+                                <Search serverApi={serverApi} />
+                            )}
                         </Focusable>
                     )}
                 </div>

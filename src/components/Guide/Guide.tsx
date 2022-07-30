@@ -24,9 +24,20 @@ type GuideProps = DefaultProps & {
     fullscreen?: boolean;
 };
 
+function createUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+        /[xy]/g,
+        function (c) {
+            var r = (Math.random() * 16) | 0,
+                v = c == 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        }
+    );
+}
+
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     const { state, dispatch } = useContext(AppContext);
-    const { currentGuide, isLoading } = state;
+    const { currentGuide, search, isLoading } = state;
     const guideDiv = useRef<HTMLDivElement>(null);
     const stateRef = useRef(state);
 
@@ -159,12 +170,43 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         }
     };
 
+    useEffect(() => {
+        if (guideDiv.current && search) {
+            const { searchText, searchIndex } = search;
+            let index = guideDiv.current.innerText.indexOf(
+                searchText,
+                searchIndex
+            );
+            if (index >= 0) {
+                // dispatch({
+                //     type: ActionType.UPDATE_SEARCH_TEXT,
+                //     payload: {
+                //         searchText,
+                //         searchIndex: index,
+                //     },
+                // });
+                const id = createUUID();
+                console.log('found');
+                guideDiv.current.innerHTML = guideDiv.current.innerHTML.replace(
+                    searchText,
+                    `<span id="${id}" class="deckfaqs_highlight">${searchText}</span>`
+                );
+                guideDiv.current
+                    ?.querySelector(`[id="${id}"]`)
+                    ?.scrollIntoView();
+            }
+        }
+    }, [search]);
+
     let cssId: any = '';
     useEffect(() => {
         serverApi
             .injectCssIntoTab(
                 !fullscreen ? 'QuickAccess' : 'SP',
                 `
+              .deckfaqs_highlight {
+                background-color: #FFFF00; 
+              }
               .deckfaqs_dark {
                 filter: invert(1)
               }

@@ -17,6 +17,11 @@ export type GuideContents = {
     anchor?: string;
 };
 
+export type GuideSearch = {
+    searchText: string;
+    searchIndex: number;
+};
+
 export type TAppState = {
     pluginState: PluginState;
     games: ListItem[];
@@ -26,6 +31,7 @@ export type TAppState = {
     darkMode: boolean;
     isLoading: boolean;
     currentGuide?: GuideContents;
+    search: GuideSearch;
 };
 
 type TAppContext = {
@@ -42,6 +48,7 @@ export const initialState: TAppState = {
     currentGuide: undefined,
     darkMode: false,
     isLoading: false,
+    search: { searchText: '', searchIndex: 0 },
 };
 
 export const AppContext = createContext<TAppContext>({
