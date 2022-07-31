@@ -1,9 +1,4 @@
-import {
-    ModalRootProps,
-    QuickAccessTab,
-    Router,
-    TextField,
-} from 'decky-frontend-lib';
+import { ModalRootProps, TextField } from 'decky-frontend-lib';
 import React, { useState } from 'react';
 import { EmptyModal } from '../EmptyModal';
 
@@ -16,18 +11,17 @@ export const SearchModal = ({ closeModal, setModalResult }: MyProps) => {
     const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);
     };
-    const showData = () => {
+    const handleSubmit = () => {
         setModalResult && setModalResult(searchText);
-        Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
     };
     return (
         <EmptyModal
             onCancel={() => {
-                Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
+                handleSubmit();
             }}
             closeModal={closeModal}
         >
-            <form onSubmit={showData}>
+            <form onSubmit={handleSubmit}>
                 <TextField label="Search" onChange={handleText} />
             </form>
         </EmptyModal>

@@ -19,6 +19,7 @@ import parse, {
 import { ActionType } from '../../reducers/AppReducer';
 import { DefaultProps, getGuideHtml } from '../../utils';
 import { TocDropdown } from '../Nav/TocDropdown';
+import { Search } from '../Nav/Search';
 
 type GuideProps = DefaultProps & {
     fullscreen?: boolean;
@@ -626,9 +627,7 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
 };
 
 const navButtonStyle = {
-    height: '40px',
     width: '200px',
-    minWidth: '0',
     padding: '10px 12px',
 };
 
@@ -667,10 +666,10 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                     display: 'flex',
                 }}
             >
-                <Focusable style={{ display: 'flex' }}>
+                <Focusable style={{ display: 'flex', width: '100%' }}>
                     {Router.MainRunningApp !== undefined && (
                         <DialogButton
-                            style={{ ...navButtonStyle, marginRight: '10px' }}
+                            style={{ minWidth: '0px', marginRight: '10px' }}
                             onClick={() => {
                                 Router.NavigateBackOrOpenMenu();
                                 setTimeout(
@@ -699,8 +698,15 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                     </DialogButton>
                     {state.currentGuide &&
                         state.currentGuide.guideToc!.length > 0 && (
-                            <TocDropdown serverApi={serverApi} />
+                            <TocDropdown
+                                style={{
+                                    minWidth: '200px',
+                                    marginRight: '10px',
+                                }}
+                                serverApi={serverApi}
+                            />
                         )}
+                    <Search fullScreen={true} />
                 </Focusable>
             </div>
             <Guide fullscreen={true} serverApi={serverApi} />

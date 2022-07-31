@@ -102,7 +102,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                     serverApi={serverApi}
                                 />
                             ) : (
-                                <Search serverApi={serverApi} />
+                                <Search />
                             )}
                         </Focusable>
                     )}

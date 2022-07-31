@@ -1,9 +1,13 @@
-import { DialogButton, showModal } from 'decky-frontend-lib';
+import {
+    DialogButton,
+    QuickAccessTab,
+    Router,
+    showModal,
+} from 'decky-frontend-lib';
 import React, { useContext } from 'react';
 import { BsSearch, BsArrowBarDown, BsArrowBarUp } from 'react-icons/bs';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
-import { DefaultProps } from '../../utils';
 import { SearchModal } from './SearchModal';
 
 const childStyle = {
@@ -12,7 +16,11 @@ const childStyle = {
     padding: '0px',
 };
 
-export const Search = ({ serverApi: _serverApi }: DefaultProps) => {
+type SearchProps = {
+    fullScreen?: boolean;
+};
+
+export const Search = ({ fullScreen }: SearchProps) => {
     const {
         state: { search },
         dispatch,
@@ -26,6 +34,9 @@ export const Search = ({ serverApi: _serverApi }: DefaultProps) => {
                 searchText: result,
             },
         });
+        if (!fullScreen) {
+            Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
+        }
     };
     return (
         <>
