@@ -19,7 +19,8 @@ export type GuideContents = {
 
 export type GuideSearch = {
     searchText: string;
-    searchIndex: number;
+    searchAnchorLength: number;
+    anchorIndex: number;
 };
 
 export type TAppState = {
@@ -48,7 +49,7 @@ export const initialState: TAppState = {
     currentGuide: undefined,
     darkMode: false,
     isLoading: false,
-    search: { searchText: '', searchIndex: 0 },
+    search: { searchText: '', searchAnchorLength: 0, anchorIndex: 0 },
 };
 
 export const AppContext = createContext<TAppContext>({

@@ -24,16 +24,9 @@ type GuideProps = DefaultProps & {
     fullscreen?: boolean;
 };
 
-function createUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-        /[xy]/g,
-        function (c) {
-            var r = (Math.random() * 16) | 0,
-                v = c == 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        }
-    );
-}
+const replaceAll = (str: string, toReplaceStr: string, replaceStr: string) => {
+    return str.replace(new RegExp(toReplaceStr, 'g'), replaceStr);
+};
 
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     const { state, dispatch } = useContext(AppContext);
@@ -171,32 +164,52 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     };
 
     useEffect(() => {
-        if (guideDiv.current && search) {
-            const { searchText, searchIndex } = search;
-            let index = guideDiv.current.innerText.indexOf(
-                searchText,
-                searchIndex
-            );
-            if (index >= 0) {
-                // dispatch({
-                //     type: ActionType.UPDATE_SEARCH_TEXT,
-                //     payload: {
-                //         searchText,
-                //         searchIndex: index,
-                //     },
-                // });
-                const id = createUUID();
-                console.log('found');
-                guideDiv.current.innerHTML = guideDiv.current.innerHTML.replace(
-                    searchText,
-                    `<span id="${id}" class="deckfaqs_highlight">${searchText}</span>`
+        if (guideDiv.current) {
+            const { searchText } = search;
+            if (searchText) {
+                let index = guideDiv.current.innerText.indexOf(searchText);
+                if (index > 0) {
+                    guideDiv.current.innerHTML = replaceAll(
+                        guideDiv.current.innerHTML,
+                        searchText,
+                        `<span class="deckfaqs_highlight">${searchText}</span>`
+                    );
+                    let elements = guideDiv.current?.querySelectorAll(
+                        '[class="deckfaqs_highlight"]'
+                    );
+                    dispatch({
+                        type: ActionType.UPDATE_SEARCH,
+                        payload: {
+                            ...search,
+                            searchAnchorLength: elements.length,
+                        },
+                    });
+                    elements[0].scrollIntoView();
+                }
+            } else {
+                let elements = guideDiv.current?.querySelectorAll(
+                    '[class="deckfaqs_highlight"]'
                 );
-                guideDiv.current
-                    ?.querySelector(`[id="${id}"]`)
-                    ?.scrollIntoView();
+                if (elements.length > 0) {
+                    const origText = (elements[0] as HTMLSpanElement).innerText;
+                    guideDiv.current.innerHTML = replaceAll(
+                        guideDiv.current.innerHTML,
+                        `<span class="deckfaqs_highlight">${origText}</span>`,
+                        origText
+                    );
+                }
             }
         }
-    }, [search]);
+    }, [search.searchText]);
+
+    useEffect(() => {
+        let elements = guideDiv.current?.querySelectorAll(
+            '[class="deckfaqs_highlight"]'
+        );
+        if (elements && elements.length > search.anchorIndex) {
+            elements[search.anchorIndex].scrollIntoView();
+        }
+    }, [search.anchorIndex]);
 
     let cssId: any = '';
     useEffect(() => {

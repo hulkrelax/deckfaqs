@@ -1,19 +1,15 @@
 import { DialogButton, showModal } from 'decky-frontend-lib';
 import React, { useContext } from 'react';
+import { BsSearch, BsArrowBarDown, BsArrowBarUp } from 'react-icons/bs';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
 import { DefaultProps } from '../../utils';
 import { SearchModal } from './SearchModal';
 
-const navButtonStyle = {
-    height: '40px',
-    width: '33%',
-    minWidth: '0',
-    display: 'inline-block',
-    verticalAlign: 'bottom',
-    padding: '10px 12px',
-    flexGrow: 1,
-    //margin: '0 auto',
+const childStyle = {
+    flexGrow: '1',
+    minWidth: '0px',
+    padding: '0px',
 };
 
 export const Search = ({ serverApi: _serverApi }: DefaultProps) => {
@@ -23,9 +19,8 @@ export const Search = ({ serverApi: _serverApi }: DefaultProps) => {
     } = useContext(AppContext);
 
     const handleResult = (result: string) => {
-        console.log(`handleResult(${result})`);
         dispatch({
-            type: ActionType.UPDATE_SEARCH_TEXT,
+            type: ActionType.UPDATE_SEARCH,
             payload: {
                 ...search,
                 searchText: result,
@@ -33,13 +28,52 @@ export const Search = ({ serverApi: _serverApi }: DefaultProps) => {
         });
     };
     return (
-        <DialogButton
-            style={navButtonStyle}
-            onClick={() => {
-                showModal(<SearchModal setModalResult={handleResult} />);
-            }}
-        >
-            Search
-        </DialogButton>
+        <>
+            <DialogButton
+                style={{ ...childStyle, maxWidth: '32%', marginRight: '5px' }}
+                onClick={() => {
+                    dispatch({
+                        type: ActionType.UPDATE_SEARCH,
+                        payload: {
+                            searchText: '',
+                            searchAnchorLength: 0,
+                            anchorIndex: 0,
+                        },
+                    });
+                    showModal(<SearchModal setModalResult={handleResult} />);
+                }}
+            >
+                <BsSearch />
+            </DialogButton>
+            <DialogButton
+                style={{ ...childStyle, maxWidth: '10%', marginRight: '5px' }}
+                onClick={() => {
+                    const anchorIndex = search.anchorIndex - 1;
+                    anchorIndex >= 0 &&
+                        dispatch({
+                            type: ActionType.UPDATE_SEARCH,
+                            payload: { ...search, anchorIndex: anchorIndex },
+                        });
+                }}
+            >
+                <BsArrowBarUp />
+            </DialogButton>
+            <DialogButton
+                style={{ ...childStyle, maxWidth: '10%' }}
+                onClick={() => {
+                    const anchorIndex = search.anchorIndex + 1;
+                    anchorIndex < search.searchAnchorLength &&
+                        dispatch({
+                            type: ActionType.UPDATE_SEARCH,
+                            payload: {
+                                ...search,
+                                anchorIndex: anchorIndex,
+                            },
+                        });
+                }}
+            >
+                <BsArrowBarDown />
+            </DialogButton>
+        </>
     );
 };

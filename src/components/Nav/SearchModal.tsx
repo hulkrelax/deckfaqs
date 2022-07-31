@@ -14,7 +14,6 @@ type MyProps = ModalRootProps & {
 export const SearchModal = ({ closeModal, setModalResult }: MyProps) => {
     const [searchText, setSearchText] = useState('');
     const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value);
         setSearchText(e.target.value);
     };
     const showData = () => {

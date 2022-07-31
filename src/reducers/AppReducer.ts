@@ -17,7 +17,7 @@ export enum ActionType {
     BACK_TO_STATE,
     UPDATE_DARK_MODE,
     UPDATE_LOADING,
-    UPDATE_SEARCH_TEXT,
+    UPDATE_SEARCH,
 }
 
 export type AppActions =
@@ -34,7 +34,7 @@ export type AppActions =
     | UpdateSearchAction;
 
 export type UpdateSearchAction = {
-    type: ActionType.UPDATE_SEARCH_TEXT;
+    type: ActionType.UPDATE_SEARCH;
     payload: GuideSearch;
 };
 
@@ -167,7 +167,7 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
                 ...state,
                 isLoading: action.payload,
             };
-        case ActionType.UPDATE_SEARCH_TEXT:
+        case ActionType.UPDATE_SEARCH:
             return {
                 ...state,
                 search: action.payload,

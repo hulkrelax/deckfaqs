@@ -31,52 +31,43 @@ export const Nav = ({ serverApi }: DefaultProps) => {
         dispatch({ type: ActionType.UPDATE_DARK_MODE, payload: result });
     };
 
-    const navButtonStyle = {
-        height: '40px',
-        width: '33%',
-        minWidth: '0',
-        display: 'inline-block',
-        verticalAlign: 'bottom',
-        padding: '10px 12px',
-        margin: '0 auto',
-    };
-    const childStyle = {
-        maxWidth: '33%',
+    const btnStyle = {
+        maxWidth: '32%',
         flexGrow: 1,
     };
     return useMemo(
         () =>
             pluginState !== 'games' ? (
                 <div style={{ flex: '0 1 auto', marginBottom: '10px' }}>
-                    <div
+                    <Focusable
                         style={{
-                            display: 'inline-block',
-                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
                             marginBottom: '5px',
                         }}
                     >
-                        <Focusable>
-                            {pluginState !== 'results' && (
-                                <DialogButton
+                        {pluginState !== 'results' && (
+                            <DialogButton
+                                style={{
+                                    ...btnStyle,
+                                    minWidth: '0px',
+                                    marginRight: '5px',
+                                }}
+                                onClick={backToGames}
+                            >
+                                <FaHome
                                     style={{
-                                        ...navButtonStyle,
-                                        marginRight: '5px',
+                                        margin: '0 auto',
+                                        display: 'block',
                                     }}
-                                    onClick={backToGames}
-                                >
-                                    <FaHome
-                                        style={{
-                                            margin: '0 auto',
-                                            display: 'block',
-                                        }}
-                                    />
-                                </DialogButton>
-                            )}
-                            <DialogButton style={navButtonStyle} onClick={back}>
-                                Back
+                                />
                             </DialogButton>
-                        </Focusable>
-                    </div>
+                        )}
+                        <DialogButton style={btnStyle} onClick={back}>
+                            Back
+                        </DialogButton>
+                    </Focusable>
                     {pluginState == 'guide' && (
                         <Focusable
                             style={{
@@ -85,27 +76,29 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                 flexWrap: 'wrap',
                             }}
                         >
-                            <div style={{ ...childStyle, marginRight: '5px' }}>
-                                <DialogButton
-                                    style={{ minWidth: '0px' }}
-                                    onClick={() => {
-                                        Router.CloseSideMenus();
-                                        setTimeout(
-                                            () =>
-                                                Router.Navigate(
-                                                    '/deckfaqs-fullscreen'
-                                                ),
-                                            100
-                                        );
-                                    }}
-                                >
-                                    <BsArrowsFullscreen />
-                                </DialogButton>
-                            </div>
+                            <DialogButton
+                                style={{
+                                    ...btnStyle,
+                                    marginRight: '5px',
+                                    minWidth: '0px',
+                                }}
+                                onClick={() => {
+                                    Router.CloseSideMenus();
+                                    setTimeout(
+                                        () =>
+                                            Router.Navigate(
+                                                '/deckfaqs-fullscreen'
+                                            ),
+                                        100
+                                    );
+                                }}
+                            >
+                                <BsArrowsFullscreen />
+                            </DialogButton>
                             {currentGuide &&
                             currentGuide.guideToc!.length > 0 ? (
                                 <TocDropdown
-                                    style={childStyle}
+                                    style={{ ...btnStyle, minWidth: '160px' }}
                                     serverApi={serverApi}
                                 />
                             ) : (
