@@ -6,7 +6,7 @@ import {
 } from 'decky-frontend-lib';
 import React, { useContext } from 'react';
 import { BsSearch, BsArrowBarDown, BsArrowBarUp } from 'react-icons/bs';
-import { AppContext } from '../../context/AppContext';
+import { AppContext, initSearchState } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
 import { SearchModal } from './SearchModal';
 
@@ -45,11 +45,7 @@ export const Search = ({ fullScreen }: SearchProps) => {
                 onClick={() => {
                     dispatch({
                         type: ActionType.UPDATE_SEARCH,
-                        payload: {
-                            searchText: '',
-                            searchAnchorLength: 0,
-                            anchorIndex: 0,
-                        },
+                        payload: initSearchState,
                     });
                     showModal(<SearchModal setModalResult={handleResult} />);
                 }}

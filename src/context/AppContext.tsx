@@ -23,6 +23,12 @@ export type GuideSearch = {
     anchorIndex: number;
 };
 
+export const initSearchState: GuideSearch = {
+    searchText: '',
+    searchAnchorLength: 0,
+    anchorIndex: 0,
+};
+
 export type TAppState = {
     pluginState: PluginState;
     games: ListItem[];
@@ -49,7 +55,7 @@ export const initialState: TAppState = {
     currentGuide: undefined,
     darkMode: false,
     isLoading: false,
-    search: { searchText: '', searchAnchorLength: 0, anchorIndex: 0 },
+    search: initSearchState,
 };
 
 export const AppContext = createContext<TAppContext>({
