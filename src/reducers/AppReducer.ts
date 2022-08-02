@@ -2,7 +2,6 @@ import { ListItem } from '../components/List/List';
 import {
     GuideContents,
     GuideSearch,
-    initSearchState,
     PluginState,
     TAppState,
 } from '../context/AppContext';
@@ -131,7 +130,11 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
                 ...state,
                 isLoading: false,
                 currentGuide: action.payload,
-                search: initSearchState,
+                search: {
+                    searchText: '',
+                    searchAnchorLength: 0,
+                    anchorIndex: -1,
+                },
                 pluginState: 'guide',
             };
         case ActionType.BACK:

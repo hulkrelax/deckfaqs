@@ -1,5 +1,4 @@
-import { ModalRootProps } from 'decky-frontend-lib';
-import { findModuleChild } from 'decky-frontend-lib';
+import { ModalRootProps, findModuleChild } from 'decky-frontend-lib';
 import { FC } from 'react';
 
 export const EmptyModal = findModuleChild((m) => {

@@ -20,13 +20,11 @@ import { ActionType } from '../../reducers/AppReducer';
 import { DefaultProps, getGuideHtml } from '../../utils';
 import { TocDropdown } from '../Nav/TocDropdown';
 import { Search } from '../Nav/Search';
+import { ScrollPanel } from '../ScrollPanel';
+import Mark from './mark';
 
 type GuideProps = DefaultProps & {
     fullscreen?: boolean;
-};
-
-const replaceAll = (str: string, toReplaceStr: string, replaceStr: string) => {
-    return str.replace(new RegExp(toReplaceStr, 'g'), replaceStr);
 };
 
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
@@ -167,38 +165,27 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     useEffect(() => {
         if (guideDiv.current) {
             const { searchText } = search;
+            const mark = new Mark(guideDiv.current?.querySelector('#faqwrap'));
             if (searchText) {
-                let index = guideDiv.current.innerText.indexOf(searchText);
-                if (index > 0) {
-                    guideDiv.current.innerHTML = replaceAll(
-                        guideDiv.current.innerHTML,
-                        searchText,
-                        `<span class="deckfaqs_highlight">${searchText}</span>`
-                    );
-                    let elements = guideDiv.current?.querySelectorAll(
-                        '[class="deckfaqs_highlight"]'
-                    );
-                    dispatch({
-                        type: ActionType.UPDATE_SEARCH,
-                        payload: {
-                            ...search,
-                            searchAnchorLength: elements.length,
-                        },
-                    });
-                    elements[0].scrollIntoView();
-                }
-            } else {
-                let elements = guideDiv.current?.querySelectorAll(
-                    '[class="deckfaqs_highlight"]'
-                );
-                if (elements.length > 0) {
-                    const origText = (elements[0] as HTMLSpanElement).innerText;
-                    guideDiv.current.innerHTML = replaceAll(
-                        guideDiv.current.innerHTML,
-                        `<span class="deckfaqs_highlight">${origText}</span>`,
-                        origText
-                    );
-                }
+                mark.unmark({
+                    done: () => {
+                        mark.mark(searchText, {
+                            className: 'deckfaqs_highlight',
+                            separateWordSearch: false,
+                            acrossElements: true,
+                            done: (numMatches: number) => {
+                                dispatch({
+                                    type: ActionType.UPDATE_SEARCH,
+                                    payload: {
+                                        ...search,
+                                        anchorIndex: 0,
+                                        searchAnchorLength: numMatches,
+                                    },
+                                });
+                            },
+                        });
+                    },
+                });
             }
         }
     }, [search.searchText]);
@@ -207,7 +194,11 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         let elements = guideDiv.current?.querySelectorAll(
             '[class="deckfaqs_highlight"]'
         );
-        if (elements && elements.length > search.anchorIndex) {
+        if (
+            elements &&
+            search.anchorIndex >= 0 &&
+            elements.length > search.anchorIndex
+        ) {
             elements[search.anchorIndex].scrollIntoView();
         }
     }, [search.anchorIndex]);
@@ -218,14 +209,43 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
             .injectCssIntoTab(
                 !fullscreen ? 'QuickAccess' : 'SP',
                 `
+                @keyframes deckfaqs_outline_grow {
+                  0% {
+                    outline: 12px solid;
+                  }
+                  100% {
+                    outline: 2px solid;
+                  }
+                }
+                @keyframes deckfaqs_outline_fade {
+                  0% {
+                    outline-color: rgba(255, 255, 255, 0);
+                  }
+                  100% {
+                    outline-color: rgba(255, 255, 255, 0.6);
+                  }
+                }
+                @keyframes deckfaqs_blinker {
+                  50% {
+                    outline-color: rgba(255, 255, 255, 0.0);
+                  }
+                }
               .deckfaqs_highlight {
-                background-color: #FFFF00; 
+                background-color: #FFFF00;
+              }
+              .deckfaqs_scrollpanel:focus {
+                outline: 2px solid rgba(255, 255, 255, 0.6);
+                outline-offset: 2px;
+                animation: deckfaqs_outline_grow 0.4s ease, deckfaqs_outline_fade 0.4s ease, deckfaqs_blinker 1.2s ease-in-out 0.4s 20;
               }
               .deckfaqs_dark {
                 filter: invert(1)
               }
               .deckfaqs_dark img:not(.ignore-color-scheme),video:not(.ignore-color-scheme) {
                 filter: brightness(50%) invert(100%);
+              }
+              .deckfaqs_dark .deckfaqs_highlight {
+                filter: invert(1)
               }
               .ffaq {
                 font-size: 14px;
@@ -598,7 +618,6 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                 serverApi.routerHook.removeRoute('/deckfaqs-fullscreen');
         };
     }, []);
-
     return useMemo(
         () =>
             isLoading ? (
@@ -609,18 +628,29 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                     <div></div>
                 </div>
             ) : (
-                <div
+                <ScrollPanel
+                    onOKButton={() => {
+                        guideDiv.current?.focus();
+                    }}
                     style={{
                         flexGrow: '1',
-                        background: '#fff',
                         overflow: 'auto',
                         height: '100%',
+                        margin: fullscreen ? '10px' : '0px',
                     }}
-                    className={state.darkMode ? 'deckfaqs_dark' : ''}
-                    ref={guideDiv}
+                    className={!fullscreen && 'deckfaqs_scrollpanel'}
+                    noFocusRing={!fullscreen}
                 >
-                    {parse(currentGuide?.guideHtml ?? '', options)}
-                </div>
+                    <Focusable
+                        //@ts-ignore
+                        focusableIfNoChildren={true}
+                        style={{ background: '#fff' }}
+                        className={state.darkMode ? 'deckfaqs_dark' : ''}
+                        ref={guideDiv}
+                    >
+                        {parse(currentGuide?.guideHtml ?? '', options)}
+                    </Focusable>
+                </ScrollPanel>
             ),
         [currentGuide, isLoading]
     );

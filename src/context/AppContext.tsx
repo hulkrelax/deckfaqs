@@ -26,7 +26,7 @@ export type GuideSearch = {
 export const initSearchState: GuideSearch = {
     searchText: '',
     searchAnchorLength: 0,
-    anchorIndex: 0,
+    anchorIndex: -1,
 };
 
 export type TAppState = {

@@ -38,7 +38,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
     return useMemo(
         () =>
             pluginState !== 'games' ? (
-                <div style={{ flex: '0 1 auto', marginBottom: '10px' }}>
+                <div style={{ flex: '0 1 auto', padding: '0 10px' }}>
                     <Focusable
                         style={{
                             display: 'flex',
@@ -108,7 +108,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                     )}
                 </div>
             ) : (
-                <div style={{ flex: '0 1 auto', marginBottom: '10px' }}>
+                <div style={{ flex: '0 1 auto', padding: '0 10px' }}>
                     <ToggleField
                         label="Enable Dark Mode?"
                         description={`Enable Dark Mode for Guides`}
