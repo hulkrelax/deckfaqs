@@ -43,6 +43,8 @@ export const TocDropdown = ({ serverApi, style }: TocDropdownProps) => {
     return (
         <div style={style}>
             <Dropdown
+                //@ts-ignore
+                disableNavSounds={true}
                 rgOptions={currentGuide?.guideToc ?? []}
                 strDefaultLabel="TOC"
                 selectedOption={currentGuide?.currentTocSection}

@@ -165,13 +165,12 @@ export const App = ({ serverApi }: DefaultProps) => {
         <div
             style={{
                 height: '395px',
-                padding: '0 16px',
                 display: 'flex',
                 flexFlow: 'column',
             }}
         >
             <Nav serverApi={serverApi} />
-            <div ref={mainDiv} style={{ flexGrow: '1', overflow: 'auto' }}>
+            <div ref={mainDiv} style={{ padding: '10px', overflow: 'auto' }}>
                 <MainView serverApi={serverApi} />
             </div>
         </div>

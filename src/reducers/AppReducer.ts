@@ -1,5 +1,10 @@
 import { ListItem } from '../components/List/List';
-import { GuideContents, PluginState, TAppState } from '../context/AppContext';
+import {
+    GuideContents,
+    GuideSearch,
+    PluginState,
+    TAppState,
+} from '../context/AppContext';
 
 export enum ActionType {
     UPDATE_PLUGIN_STATE,
@@ -12,6 +17,7 @@ export enum ActionType {
     BACK_TO_STATE,
     UPDATE_DARK_MODE,
     UPDATE_LOADING,
+    UPDATE_SEARCH,
 }
 
 export type AppActions =
@@ -24,7 +30,13 @@ export type AppActions =
     | BackAction
     | BackToStateAction
     | UpdateDarkModeAction
-    | UpdateLoadingAction;
+    | UpdateLoadingAction
+    | UpdateSearchAction;
+
+export type UpdateSearchAction = {
+    type: ActionType.UPDATE_SEARCH;
+    payload: GuideSearch;
+};
 
 export type UpdateLoadingAction = {
     type: ActionType.UPDATE_LOADING;
@@ -118,6 +130,11 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
                 ...state,
                 isLoading: false,
                 currentGuide: action.payload,
+                search: {
+                    searchText: '',
+                    searchAnchorLength: 0,
+                    anchorIndex: -1,
+                },
                 pluginState: 'guide',
             };
         case ActionType.BACK:
@@ -154,6 +171,11 @@ export const appReducer = (state: TAppState, action: AppActions): TAppState => {
             return {
                 ...state,
                 isLoading: action.payload,
+            };
+        case ActionType.UPDATE_SEARCH:
+            return {
+                ...state,
+                search: action.payload,
             };
         default:
             return state;

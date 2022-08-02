@@ -88,7 +88,7 @@ get_guide();
 `;
 
 async function delay(ms: number, state = null) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
         window.setTimeout(() => resolve(state), ms);
     });
 }

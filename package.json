@@ -20,11 +20,12 @@
         "prettier": "2.7.1",
         "rollup": "^2.75.7",
         "rollup-plugin-import-assets": "^1.1.1",
+        "rollup-plugin-terser": "^7.0.2",
         "tslib": "^2.4.0",
         "typescript": "^4.7.4"
     },
     "dependencies": {
-        "decky-frontend-lib": "^1.1.0",
+        "decky-frontend-lib": "^1.2.4",
         "dompurify": "^2.3.9",
         "html-react-parser": "^3.0.0",
         "react": "^18.2.0",

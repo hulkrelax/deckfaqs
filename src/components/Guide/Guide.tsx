@@ -19,6 +19,9 @@ import parse, {
 import { ActionType } from '../../reducers/AppReducer';
 import { DefaultProps, getGuideHtml } from '../../utils';
 import { TocDropdown } from '../Nav/TocDropdown';
+import { Search } from '../Nav/Search';
+import { ScrollPanel } from '../ScrollPanel';
+import Mark from './mark';
 
 type GuideProps = DefaultProps & {
     fullscreen?: boolean;
@@ -26,7 +29,7 @@ type GuideProps = DefaultProps & {
 
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
     const { state, dispatch } = useContext(AppContext);
-    const { currentGuide, isLoading } = state;
+    const { currentGuide, search, isLoading } = state;
     const guideDiv = useRef<HTMLDivElement>(null);
     const stateRef = useRef(state);
 
@@ -159,17 +162,90 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         }
     };
 
+    useEffect(() => {
+        if (guideDiv.current) {
+            const { searchText } = search;
+            const mark = new Mark(guideDiv.current?.querySelector('#faqwrap'));
+            if (searchText) {
+                mark.unmark({
+                    done: () => {
+                        mark.mark(searchText, {
+                            className: 'deckfaqs_highlight',
+                            separateWordSearch: false,
+                            acrossElements: true,
+                            done: (numMatches: number) => {
+                                dispatch({
+                                    type: ActionType.UPDATE_SEARCH,
+                                    payload: {
+                                        ...search,
+                                        anchorIndex: 0,
+                                        searchAnchorLength: numMatches,
+                                    },
+                                });
+                            },
+                        });
+                    },
+                });
+            }
+        }
+    }, [search.searchText]);
+
+    useEffect(() => {
+        let elements = guideDiv.current?.querySelectorAll(
+            '[class="deckfaqs_highlight"]'
+        );
+        if (
+            elements &&
+            search.anchorIndex >= 0 &&
+            elements.length > search.anchorIndex
+        ) {
+            elements[search.anchorIndex].scrollIntoView();
+        }
+    }, [search.anchorIndex]);
+
     let cssId: any = '';
     useEffect(() => {
         serverApi
             .injectCssIntoTab(
                 !fullscreen ? 'QuickAccess' : 'SP',
                 `
+                @keyframes deckfaqs_outline_grow {
+                  0% {
+                    outline: 12px solid;
+                  }
+                  100% {
+                    outline: 2px solid;
+                  }
+                }
+                @keyframes deckfaqs_outline_fade {
+                  0% {
+                    outline-color: rgba(255, 255, 255, 0);
+                  }
+                  100% {
+                    outline-color: rgba(255, 255, 255, 0.6);
+                  }
+                }
+                @keyframes deckfaqs_blinker {
+                  50% {
+                    outline-color: rgba(255, 255, 255, 0.0);
+                  }
+                }
+              .deckfaqs_highlight {
+                background-color: #FFFF00;
+              }
+              .deckfaqs_scrollpanel:focus {
+                outline: 2px solid rgba(255, 255, 255, 0.6);
+                outline-offset: 2px;
+                animation: deckfaqs_outline_grow 0.4s ease, deckfaqs_outline_fade 0.4s ease, deckfaqs_blinker 1.2s ease-in-out 0.4s 20;
+              }
               .deckfaqs_dark {
                 filter: invert(1)
               }
               .deckfaqs_dark img:not(.ignore-color-scheme),video:not(.ignore-color-scheme) {
                 filter: brightness(50%) invert(100%);
+              }
+              .deckfaqs_dark .deckfaqs_highlight {
+                filter: invert(1)
               }
               .ffaq {
                 font-size: 14px;
@@ -542,7 +618,6 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                 serverApi.routerHook.removeRoute('/deckfaqs-fullscreen');
         };
     }, []);
-
     return useMemo(
         () =>
             isLoading ? (
@@ -553,27 +628,36 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                     <div></div>
                 </div>
             ) : (
-                <div
+                <ScrollPanel
+                    onOKButton={() => {
+                        guideDiv.current?.focus();
+                    }}
                     style={{
                         flexGrow: '1',
-                        background: '#fff',
                         overflow: 'auto',
                         height: '100%',
+                        margin: fullscreen ? '10px' : '0px',
                     }}
-                    className={state.darkMode ? 'deckfaqs_dark' : ''}
-                    ref={guideDiv}
+                    className={!fullscreen && 'deckfaqs_scrollpanel'}
+                    noFocusRing={!fullscreen}
                 >
-                    {parse(currentGuide?.guideHtml ?? '', options)}
-                </div>
+                    <Focusable
+                        //@ts-ignore
+                        focusableIfNoChildren={true}
+                        style={{ background: '#fff' }}
+                        className={state.darkMode ? 'deckfaqs_dark' : ''}
+                        ref={guideDiv}
+                    >
+                        {parse(currentGuide?.guideHtml ?? '', options)}
+                    </Focusable>
+                </ScrollPanel>
             ),
         [currentGuide, isLoading]
     );
 };
 
 const navButtonStyle = {
-    height: '40px',
     width: '200px',
-    minWidth: '0',
     padding: '10px 12px',
 };
 
@@ -606,16 +690,16 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
         >
             <div
                 style={{
-                    marginBottom: '10px',
-                    marginLeft: '10px',
-                    marginRight: '10px',
+                    margin: '0 10px',
                     display: 'flex',
                 }}
             >
-                <Focusable style={{ display: 'flex' }}>
+                <Focusable style={{ display: 'flex', width: '100%' }}>
                     {Router.MainRunningApp !== undefined && (
                         <DialogButton
-                            style={{ ...navButtonStyle, marginRight: '10px' }}
+                            //@ts-ignore
+                            disableNavSounds={true}
+                            style={{ minWidth: '0px', marginRight: '10px' }}
                             onClick={() => {
                                 Router.NavigateBackOrOpenMenu();
                                 setTimeout(
@@ -628,6 +712,8 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                         </DialogButton>
                     )}
                     <DialogButton
+                        //@ts-ignore
+                        disableNavSounds={true}
                         style={{ ...navButtonStyle, marginRight: '10px' }}
                         onClick={() => {
                             Router.NavigateBackOrOpenMenu();
@@ -644,8 +730,15 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                     </DialogButton>
                     {state.currentGuide &&
                         state.currentGuide.guideToc!.length > 0 && (
-                            <TocDropdown serverApi={serverApi} />
+                            <TocDropdown
+                                style={{
+                                    minWidth: '200px',
+                                    marginRight: '10px',
+                                }}
+                                serverApi={serverApi}
+                            />
                         )}
+                    <Search fullScreen={true} />
                 </Focusable>
             </div>
             <Guide fullscreen={true} serverApi={serverApi} />
