@@ -49,6 +49,8 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                     >
                         {pluginState !== 'results' && (
                             <DialogButton
+                                //@ts-ignore
+                                disableNavSounds={true}
                                 style={{
                                     ...btnStyle,
                                     minWidth: '0px',
@@ -64,7 +66,12 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                 />
                             </DialogButton>
                         )}
-                        <DialogButton style={btnStyle} onClick={back}>
+                        <DialogButton
+                            //@ts-ignore
+                            disableNavSounds={true}
+                            style={btnStyle}
+                            onClick={back}
+                        >
                             Back
                         </DialogButton>
                     </Focusable>
@@ -77,6 +84,8 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                             }}
                         >
                             <DialogButton
+                                //@ts-ignore
+                                disableNavSounds={true}
                                 style={{
                                     ...btnStyle,
                                     marginRight: '5px',

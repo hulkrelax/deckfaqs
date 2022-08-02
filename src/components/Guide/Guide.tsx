@@ -690,15 +690,15 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
         >
             <div
                 style={{
-                    marginBottom: '10px',
-                    marginLeft: '10px',
-                    marginRight: '10px',
+                    margin: '0 10px',
                     display: 'flex',
                 }}
             >
                 <Focusable style={{ display: 'flex', width: '100%' }}>
                     {Router.MainRunningApp !== undefined && (
                         <DialogButton
+                            //@ts-ignore
+                            disableNavSounds={true}
                             style={{ minWidth: '0px', marginRight: '10px' }}
                             onClick={() => {
                                 Router.NavigateBackOrOpenMenu();
@@ -712,6 +712,8 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                         </DialogButton>
                     )}
                     <DialogButton
+                        //@ts-ignore
+                        disableNavSounds={true}
                         style={{ ...navButtonStyle, marginRight: '10px' }}
                         onClick={() => {
                             Router.NavigateBackOrOpenMenu();

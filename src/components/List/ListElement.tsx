@@ -18,7 +18,12 @@ export const ListElement = ({
 
     return (
         <PanelSectionRow>
-            <ButtonItem layout="below" onClick={handleClick}>
+            <ButtonItem
+                //@ts-ignore
+                disableNavSounds={true}
+                layout="below"
+                onClick={handleClick}
+            >
                 {displayText}
             </ButtonItem>
         </PanelSectionRow>
