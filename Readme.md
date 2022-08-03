@@ -4,25 +4,16 @@
 
 A GameFAQs browser for the Steam Deck. This plugin supports both Steam and non-Steam games (like things setup with Steam Rom Manager for example)
 
-Built with the [Steam Deck Plugin Loader](https://github.com/SteamDeckHomebrew/PluginLoader).
+Built with [Decky Loader](https://github.com/SteamDeckHomebrew/PluginLoader).
 
 ## How to Install
 
-### Current Version
+### Current Version (Decky Loader version)
 
-1. You need to install [Plugin Loader](https://github.com/SteamDeckHomebrew/PluginLoader#installation) first before getting started.
+1. You need to install the [Decky Loader pre-release](https://github.com/SteamDeckHomebrew/PluginLoader#installation) first before getting started.
 2. Download/Install Steps
-    - (**RECOMMENDED**) Install from PluginLoader directly. DeckFAQs is now on the PluginLoader browser. You can access it by tapping the shopping bag icon from Plugin Loader and looking for "deckfaqs_pluginbrowser".
-        - **Note that if you previously installed DeckFAQs with one of the options below, you should first uninstall that by running `sudo rm -r /home/deck/homebrew/plugins/deckfaqs` or `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/uninstall.sh | sh`**
-    - Install with script<br>
-      `curl -L https://github.com/hulkrelax/deckfaqs/raw/main/scripts/install_plugin.sh | sh`
-    - or Install manually<br>
-      `curl -LJO https://github.com/hulkrelax/deckfaqs/releases/download/v0.1.1/deckfaqs.tar.gz`<br>
-      `sudo tar -xvf deckfaqs.tar.gz -C /home/deck/homebrew/plugins/`
+    - Install from Decky Loader directly. DeckFAQs is on the Decky Loader store browser. Be sure to download DeckFAQs and not "deckfaqs_plugin_browser" which is legacy and no longer supported
 
-### Decky Loader Version
-
-TBA
 
 ## Features
 
@@ -30,7 +21,7 @@ DeckFAQs supports both rich-text and plain-text guides from GameFAQs.
 
 ### Game List
 
-![](images/001_games.png)
+![](images/001_games.jpeg)
 
 ### Search Results
 
@@ -42,7 +33,7 @@ DeckFAQs supports both rich-text and plain-text guides from GameFAQs.
 
 ### Rich-text Guide
 
-![](images/004_guide.png)
+![](images/rich_text.jpg)
 
 ### Plain-text Guide
 
@@ -51,6 +42,16 @@ DeckFAQs supports both rich-text and plain-text guides from GameFAQs.
 ### Fullscreen Guide
 
 ![](images/006_fullscreen.png)
+
+![](images/fullscreen.jpg)
+
+### Dark Mode
+
+![](images/dark_mode.jpg)
+
+### Search
+
+![](images/search.jpg)
 
 ## Known Issues
 
