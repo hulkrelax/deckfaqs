@@ -9,7 +9,7 @@ specifiers:
   '@types/dompurify': ^2.3.3
   '@types/react': ^17.0.47
   '@types/react-dom': ^18.0.5
-  decky-frontend-lib: ^1.2.4
+  decky-frontend-lib: ^1.7.6
   dompurify: ^2.3.9
   html-react-parser: ^3.0.0
   prettier: 2.7.1
@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 1.2.4
+  decky-frontend-lib: 1.7.6
   dompurify: 2.3.9
   html-react-parser: 3.0.0_react@18.2.0
   react: 18.2.0
@@ -304,8 +304,10 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: true
 
-  /decky-frontend-lib/1.2.4:
-    resolution: {integrity: sha512-r3mLEey9KUkF68geJVSjNlOz/Fg4vpMKUzoutSceyd8o/J5l+QR+Vf0b3gwK3UN9Sp4Pj4XQ1eB82+/W0ApsFg==}
+  /decky-frontend-lib/1.7.6:
+    resolution: {integrity: sha512-sefRJOff0TWOdLX9RAZUf2Mu5dUmaneJb8ngbELlYoAjA5m4sU5i1Q5qaqlD2ELa9i1hE2Q1tlgjTb70bSxazw==}
+    dependencies:
+      minimist: 1.2.6
     dev: false
 
   /deepmerge/4.2.2:
@@ -510,6 +512,10 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
     dev: true
+
+  /minimist/1.2.6:
+    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
+    dev: false
 
   /once/1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
