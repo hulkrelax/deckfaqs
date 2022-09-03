@@ -1,7 +1,9 @@
 import {
     DialogButton,
     Focusable,
+    QuickAccessTab,
     Router,
+    showModal,
     ToggleField,
 } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
@@ -9,8 +11,9 @@ import { BsArrowsFullscreen } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
-import { DefaultProps } from '../../utils';
+import { DefaultProps, gameSearch } from '../../utils';
 import { Search } from './Search';
+import { SearchModal } from './SearchModal';
 import { TocDropdown } from './TocDropdown';
 
 export const Nav = ({ serverApi }: DefaultProps) => {
@@ -29,6 +32,12 @@ export const Nav = ({ serverApi }: DefaultProps) => {
 
     const handleDarkMode = (result: boolean) => {
         dispatch({ type: ActionType.UPDATE_DARK_MODE, payload: result });
+    };
+
+    const handleSearch = (result: string) => {
+        result = result.trim();
+        result && gameSearch(result, serverApi, dispatch);
+        Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
     };
 
     const btnStyle = {
@@ -118,6 +127,21 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                 </div>
             ) : (
                 <div style={{ flex: '0 1 auto', padding: '0 10px' }}>
+                    <DialogButton
+                        //@ts-ignore
+                        disableNavSounds={true}
+                        style={{ ...btnStyle, marginBottom: '10px' }}
+                        onClick={() => {
+                            showModal(
+                                <SearchModal
+                                    promptText="Search for a game"
+                                    setModalResult={handleSearch}
+                                />
+                            );
+                        }}
+                    >
+                        Search games
+                    </DialogButton>
                     <ToggleField
                         label="Enable Dark Mode?"
                         description={`Enable Dark Mode for Guides`}

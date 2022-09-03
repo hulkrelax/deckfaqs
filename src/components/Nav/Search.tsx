@@ -49,7 +49,12 @@ export const Search = ({ fullScreen }: SearchProps) => {
                         type: ActionType.UPDATE_SEARCH,
                         payload: initSearchState,
                     });
-                    showModal(<SearchModal setModalResult={handleResult} />);
+                    showModal(
+                        <SearchModal
+                            promptText="Search the guide"
+                            setModalResult={handleResult}
+                        />
+                    );
                 }}
             >
                 <BsSearch />

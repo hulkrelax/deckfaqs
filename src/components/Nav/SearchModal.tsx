@@ -4,9 +4,14 @@ import { EmptyModal } from '../EmptyModal';
 
 type MyProps = ModalRootProps & {
     setModalResult?(result: string): void;
+    promptText: string;
 };
 
-export const SearchModal = ({ closeModal, setModalResult }: MyProps) => {
+export const SearchModal = ({
+    closeModal,
+    setModalResult,
+    promptText,
+}: MyProps) => {
     const [searchText, setSearchText] = useState('');
     const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);
@@ -34,7 +39,7 @@ export const SearchModal = ({ closeModal, setModalResult }: MyProps) => {
                     focusOnMount={true}
                     label="Search"
                     //@ts-ignore
-                    placeholder="Search the guide"
+                    placeholder={promptText}
                     onChange={handleText}
                 />
             </form>
