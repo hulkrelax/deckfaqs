@@ -1,5 +1,9 @@
 import { ServerAPI } from 'decky-frontend-lib';
 import DOMPurify from 'dompurify';
+import React from 'react';
+import { SearchResult } from './components/List/GameList';
+import { ListItem } from './components/List/List';
+import { ActionType, AppActions } from './reducers/AppReducer';
 
 export type DefaultProps = {
     serverApi: ServerAPI;
@@ -171,4 +175,45 @@ export const getGuideHtml = async (
     }
     SteamClient.BrowserView.Destroy(test);
     handleResult(htmlResult, toc);
+};
+
+export const gameSearch = async (
+    game: string,
+    serverApi: ServerAPI,
+    dispatch: React.Dispatch<AppActions>
+) => {
+    game = game.replace(' ', '+');
+    const searchUrl = `https://gamefaqs.gamespot.com/ajax/home_game_search?term=${game}`;
+    const home = 'https://gamefaqs.gamespot.com';
+    dispatch({
+        type: ActionType.UPDATE_PLUGIN_STATE,
+        payload: { pluginState: 'results', isLoading: true },
+    });
+    getContent(
+        searchUrl,
+        serverApi,
+        `function get_games() {
+        return document.documentElement.innerText;
+    }
+    get_games()`,
+        (result: string) => {
+            let searchResults: ListItem[] = [];
+            if (result) {
+                const results: SearchResult[] = JSON.parse(result);
+                results.forEach((result) => {
+                    if (result.product_name) {
+                        const url = `${home}${result.url}`;
+                        searchResults.push({
+                            text: `${result.product_name} - ${result.platform_name}`,
+                            url: url,
+                        });
+                    }
+                });
+            }
+            dispatch({
+                type: ActionType.UPDATE_RESULTS,
+                payload: searchResults,
+            });
+        }
+    );
 };

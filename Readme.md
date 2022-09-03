@@ -14,7 +14,6 @@ Built with [Decky Loader](https://github.com/SteamDeckHomebrew/PluginLoader).
 2. Download/Install Steps
     - Install from Decky Loader directly. DeckFAQs is on the Decky Loader store browser. Be sure to download DeckFAQs and not "deckfaqs_plugin_browser" which is legacy and no longer supported
 
-
 ## Features
 
 DeckFAQs supports both rich-text and plain-text guides from GameFAQs.
