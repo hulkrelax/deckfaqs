@@ -16,5 +16,6 @@ export default definePlugin((serverApi: ServerAPI) => {
         onDismount() {
             serverApi.routerHook.removeRoute('/deckfaqs-fullscreen');
         },
+        alwaysRender: true,
     };
 });
