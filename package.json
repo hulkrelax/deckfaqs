@@ -1,6 +1,6 @@
 {
     "name": "deckfaqs",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "GameFAQs browser for the Steam Deck",
     "scripts": {
         "build": "rollup -c"
@@ -25,7 +25,7 @@
         "typescript": "^4.7.4"
     },
     "dependencies": {
-        "decky-frontend-lib": "^1.7.6",
+        "decky-frontend-lib": "^1.8.3",
         "dompurify": "^2.3.9",
         "html-react-parser": "^3.0.0",
         "react": "^18.2.0",

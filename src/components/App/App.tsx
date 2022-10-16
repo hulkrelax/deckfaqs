@@ -164,9 +164,10 @@ export const App = ({ serverApi }: DefaultProps) => {
     return (
         <div
             style={{
-                height: '395px',
+                height: '80vh',
                 display: 'flex',
                 flexFlow: 'column',
+                flex: 1,
             }}
         >
             <Nav serverApi={serverApi} />

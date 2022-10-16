@@ -9,7 +9,7 @@ specifiers:
   '@types/dompurify': ^2.3.3
   '@types/react': ^17.0.47
   '@types/react-dom': ^18.0.5
-  decky-frontend-lib: ^1.7.6
+  decky-frontend-lib: ^1.8.3
   dompurify: ^2.3.9
   html-react-parser: ^3.0.0
   prettier: 2.7.1
@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 1.7.6
+  decky-frontend-lib: 1.8.3
   dompurify: 2.3.9
   html-react-parser: 3.0.0_react@18.2.0
   react: 18.2.0
@@ -304,8 +304,8 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: true
 
-  /decky-frontend-lib/1.7.6:
-    resolution: {integrity: sha512-sefRJOff0TWOdLX9RAZUf2Mu5dUmaneJb8ngbELlYoAjA5m4sU5i1Q5qaqlD2ELa9i1hE2Q1tlgjTb70bSxazw==}
+  /decky-frontend-lib/1.8.3:
+    resolution: {integrity: sha512-k5/Zvv3Td55JKiETpYyFVweF5Tty9jWN/kipiA4PKJEMz7mFixzGuJ3p7Ud6hAqJ4aC5K4h4Z33gVQR48VVWMg==}
     dependencies:
       minimist: 1.2.6
     dev: false

@@ -1,3 +1,4 @@
-## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.4)
+## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.4.1)
 
--   Adds the ability to search for any game regardless of whether it is in your Steam library or not.
+-   Fix issue with latest stable Decky release
+-   Fix minor styling issue with plugin when on higher resolution displays (docked)
