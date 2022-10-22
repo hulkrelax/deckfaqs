@@ -53,7 +53,8 @@ export const Search = ({ fullScreen }: SearchProps) => {
                         <SearchModal
                             promptText="Search the guide"
                             setModalResult={handleResult}
-                        />
+                        />,
+                        window
                     );
                 }}
             >

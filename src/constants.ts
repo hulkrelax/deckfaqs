@@ -17,6 +17,13 @@ const ignoreNonSteam = [
     'xemu (emulator)',
     'Yuzu',
     'Moonlight',
+    'pcsx2-qt',
+    'Ryujinx',
+    'ScummVM',
+    'Vita3K',
+    'Chiaki',
+    'Heroic Games Launcher',
+    'MAME',
 ];
 
 export { ignoreSteam, ignoreNonSteam, faqsNightmareRegex };

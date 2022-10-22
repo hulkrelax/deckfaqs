@@ -136,7 +136,8 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                 <SearchModal
                                     promptText="Search for a game"
                                     setModalResult={handleSearch}
-                                />
+                                />,
+                                window
                             );
                         }}
                     >
