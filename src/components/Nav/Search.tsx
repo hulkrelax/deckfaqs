@@ -1,5 +1,6 @@
 import {
     DialogButton,
+    findSP,
     QuickAccessTab,
     Router,
     showModal,
@@ -54,7 +55,7 @@ export const Search = ({ fullScreen }: SearchProps) => {
                             promptText="Search the guide"
                             setModalResult={handleResult}
                         />,
-                        window
+                        findSP()
                     );
                 }}
             >

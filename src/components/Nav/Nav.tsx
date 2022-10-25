@@ -5,6 +5,7 @@ import {
     Router,
     showModal,
     ToggleField,
+    findSP
 } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
 import { BsArrowsFullscreen } from 'react-icons/bs';
@@ -137,7 +138,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                     promptText="Search for a game"
                                     setModalResult={handleSearch}
                                 />,
-                                window
+                                findSP()
                             );
                         }}
                     >
