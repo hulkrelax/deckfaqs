@@ -1,4 +1,3 @@
-## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.4.2)
+## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.5.0)
 
--   Fix issue showModal based on preview release of Steam Deck OS
--   Add more items to ignore list so they don't show up in game list
+-   No longer inject css into tab but instead embed as style element (fixes issue with beta Steam Client)
