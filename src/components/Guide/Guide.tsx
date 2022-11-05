@@ -710,7 +710,6 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                         disableNavSounds={true}
                         style={{ ...navButtonStyle, marginRight: '10px' }}
                         onClick={() => {
-                            console.log('open');
                             if (
                                 typeof Router.NavigateBackOrOpenMenu ===
                                 'function'
