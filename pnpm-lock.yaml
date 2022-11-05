@@ -9,7 +9,7 @@ specifiers:
   '@types/dompurify': ^2.3.3
   '@types/react': ^17.0.47
   '@types/react-dom': ^18.0.5
-  decky-frontend-lib: ^3.7.11
+  decky-frontend-lib: ^3.7.14
   dompurify: ^2.3.9
   html-react-parser: ^3.0.0
   prettier: 2.7.1
@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  decky-frontend-lib: 3.7.11
+  decky-frontend-lib: 3.7.14
   dompurify: 2.3.9
   html-react-parser: 3.0.0_react@18.2.0
   react: 18.2.0
@@ -304,8 +304,8 @@ packages:
     resolution: {integrity: sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==}
     dev: true
 
-  /decky-frontend-lib/3.7.11:
-    resolution: {integrity: sha512-c5/kXqCLYhCl0zC+kPJ2gTUjTp6N0zUFKzTQKVKTuQ3U+01fHAU6sUsDqudbdTNdjXiofGujMmeJqKaU2vQoXQ==}
+  /decky-frontend-lib/3.7.14:
+    resolution: {integrity: sha512-ShAoP3VqiwkJYukDBHsOF9fk7wYw0VaKpHw6j9WdzLxwZwBcg0J7QBNIFYP3nfA0UgEwSJVEg/22kONiplipmA==}
     dev: false
 
   /deepmerge/4.2.2:

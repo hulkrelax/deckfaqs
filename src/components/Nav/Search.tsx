@@ -3,7 +3,7 @@ import {
     findSP,
     QuickAccessTab,
     Router,
-    showModal,
+    showModal
 } from 'decky-frontend-lib';
 import React, { useContext } from 'react';
 import { BsSearch, BsArrowBarDown, BsArrowBarUp } from 'react-icons/bs';
@@ -36,7 +36,7 @@ export const Search = ({ fullScreen }: SearchProps) => {
             },
         });
         if (!fullScreen) {
-            Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
+            Router.OpenQuickAccessMenu && Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
         }
     };
     return (

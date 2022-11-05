@@ -696,7 +696,6 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                             disableNavSounds={true}
                             style={{ minWidth: '0px', marginRight: '10px' }}
                             onClick={() => {
-                                Router.NavigateBackOrOpenMenu();
                                 setTimeout(
                                     () => Router.NavigateToRunningApp(),
                                     200
@@ -711,14 +710,31 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                         disableNavSounds={true}
                         style={{ ...navButtonStyle, marginRight: '10px' }}
                         onClick={() => {
-                            Router.NavigateBackOrOpenMenu();
-                            setTimeout(
-                                () =>
+                            console.log('open');
+                            if (
+                                typeof Router.NavigateBackOrOpenMenu ===
+                                'function'
+                            ) {
+                                Router.NavigateBackOrOpenMenu();
+                            } else {
+                                // @ts-ignore
+                                Router.WindowStore.GamepadUIMainWindowInstance.NavigateBack();
+                            }
+                            setTimeout(() => {
+                                if (
+                                    typeof Router.OpenQuickAccessMenu ===
+                                    'function'
+                                ) {
                                     Router.OpenQuickAccessMenu(
                                         QuickAccessTab.Decky
-                                    ),
-                                200
-                            );
+                                    );
+                                } else {
+                                    //@ts-ignore
+                                    Router.WindowStore.GamepadUIMainWindowInstance.MenuStore.OpenQuickAccessMenu(
+                                        QuickAccessTab.Decky
+                                    );
+                                }
+                            }, 200);
                         }}
                     >
                         Back to DeckFAQs

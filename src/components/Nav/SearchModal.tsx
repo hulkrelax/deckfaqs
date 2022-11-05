@@ -1,6 +1,5 @@
-import { ModalRootProps, TextField } from 'decky-frontend-lib';
+import { ModalRootProps, ModalRoot, TextField } from 'decky-frontend-lib';
 import React, { useEffect, useRef, useState } from 'react';
-import { EmptyModal } from '../EmptyModal';
 
 type MyProps = ModalRootProps & {
     setModalResult?(result: string): void;
@@ -18,6 +17,7 @@ export const SearchModal = ({
     };
     const handleSubmit = () => {
         setModalResult && setModalResult(searchText);
+        closeModal && closeModal();
     };
     const textField = useRef<any>();
 
@@ -26,11 +26,9 @@ export const SearchModal = ({
         textField.current?.element?.click();
     }, []);
     return (
-        <EmptyModal
-            onCancel={() => {
-                handleSubmit();
-            }}
-            closeModal={closeModal}
+        <ModalRoot
+            closeModal={handleSubmit}
+            onEscKeypress={handleSubmit}
         >
             <form onSubmit={handleSubmit}>
                 <TextField
@@ -43,6 +41,6 @@ export const SearchModal = ({
                     onChange={handleText}
                 />
             </form>
-        </EmptyModal>
+        </ModalRoot>
     );
 };
