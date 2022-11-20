@@ -6,7 +6,6 @@ import { List } from './List';
 
 export type SearchResult = {
     product_name: string | undefined;
-    platform_name: string | undefined;
     url: string | undefined;
 };
 

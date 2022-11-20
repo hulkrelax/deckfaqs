@@ -164,7 +164,7 @@ export const gameSearch = async (
                     if (result.product_name) {
                         const url = `${home}${result.url}`;
                         searchResults.push({
-                            text: `${result.product_name} - ${result.platform_name}`,
+                            text: `${result.product_name}`,
                             url: url,
                         });
                     }
