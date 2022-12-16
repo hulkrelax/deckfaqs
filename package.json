@@ -1,6 +1,6 @@
 {
     "name": "deckfaqs",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "description": "GameFAQs browser for the Steam Deck",
     "scripts": {
         "build": "rollup -c"
