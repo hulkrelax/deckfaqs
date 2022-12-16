@@ -6,6 +6,7 @@ import {
     findSP,
     showModal,
     QuickAccessTab,
+    Navigation,
 } from 'decky-frontend-lib';
 import React, { useContext, useMemo } from 'react';
 import { BsArrowsFullscreen } from 'react-icons/bs';
@@ -38,8 +39,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
     const handleSearch = (result: string) => {
         result = result.trim();
         result && gameSearch(result, serverApi, dispatch);
-        Router.OpenQuickAccessMenu &&
-            Router.OpenQuickAccessMenu(QuickAccessTab.Decky);
+        Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky);
     };
 
     const btnStyle = {

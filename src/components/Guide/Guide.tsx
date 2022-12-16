@@ -1,6 +1,7 @@
 import {
     DialogButton,
     Focusable,
+    Navigation,
     QuickAccessTab,
     Router,
 } from 'decky-frontend-lib';
@@ -697,6 +698,7 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                             style={{ minWidth: '0px', marginRight: '10px' }}
                             onClick={() => {
                                 setTimeout(
+                                    //@ts-ignore
                                     () => Router.NavigateToRunningApp(),
                                     200
                                 );
@@ -710,29 +712,11 @@ const FullScreenGuide = ({ serverApi, onDismiss }: FullScreenGuideProps) => {
                         disableNavSounds={true}
                         style={{ ...navButtonStyle, marginRight: '10px' }}
                         onClick={() => {
-                            if (
-                                typeof Router.NavigateBackOrOpenMenu ===
-                                'function'
-                            ) {
-                                Router.NavigateBackOrOpenMenu();
-                            } else {
-                                // @ts-ignore
-                                Router.WindowStore.GamepadUIMainWindowInstance.NavigateBack();
-                            }
+                            Navigation.NavigateBack();
                             setTimeout(() => {
-                                if (
-                                    typeof Router.OpenQuickAccessMenu ===
-                                    'function'
-                                ) {
-                                    Router.OpenQuickAccessMenu(
-                                        QuickAccessTab.Decky
-                                    );
-                                } else {
-                                    //@ts-ignore
-                                    Router.WindowStore.GamepadUIMainWindowInstance.MenuStore.OpenQuickAccessMenu(
-                                        QuickAccessTab.Decky
-                                    );
-                                }
+                                Navigation.OpenQuickAccessMenu(
+                                    QuickAccessTab.Decky
+                                );
                             }, 200);
                         }}
                     >
