@@ -1,3 +1,4 @@
-## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.5.3)
+## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.5.4)
 
--   Bump Decky Frontend Library version to address upcoming compatibility issues with Steam Client
+-   Bump Decky Frontend Library version 
+-   Remove code minifier
