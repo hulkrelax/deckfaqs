@@ -1,7 +1,6 @@
 import {
     DialogButton,
     Focusable,
-    Router,
     ToggleField,
     findSP,
     showModal,
@@ -103,10 +102,10 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                     minWidth: '0px',
                                 }}
                                 onClick={() => {
-                                    Router.CloseSideMenus();
+                                    Navigation.CloseSideMenus();
                                     setTimeout(
                                         () =>
-                                            Router.Navigate(
+                                            Navigation.Navigate(
                                                 '/deckfaqs-fullscreen'
                                             ),
                                         100

@@ -5,7 +5,6 @@ import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import { defineConfig } from 'rollup';
 import importAssets from 'rollup-plugin-import-assets';
-import { terser } from 'rollup-plugin-terser';
 import { name } from './plugin.json';
 
 export default defineConfig({
@@ -33,6 +32,5 @@ export default defineConfig({
         },
         format: 'iife',
         exports: 'default',
-        plugins: [terser({ mangle: false, compress: false })],
     },
 });
