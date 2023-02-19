@@ -10,9 +10,10 @@ import {
 import React, { useContext, useMemo } from 'react';
 import { BsArrowsFullscreen } from 'react-icons/bs';
 import { FaHome } from 'react-icons/fa';
-import { AppContext } from '../../context/AppContext';
+import { FiRotateCw } from 'react-icons/fi';
+import { AppContext, TableOfContentEntry } from '../../context/AppContext';
 import { ActionType } from '../../reducers/AppReducer';
-import { DefaultProps, gameSearch } from '../../utils';
+import { DefaultProps, gameSearch, getGuideHtml } from '../../utils';
 import { Search } from './Search';
 import { SearchModal } from './SearchModal';
 import { TocDropdown } from './TocDropdown';
@@ -25,6 +26,26 @@ export const Nav = ({ serverApi }: DefaultProps) => {
 
     const back = () => {
         dispatch({ type: ActionType.BACK });
+    };
+
+    const reload = () => {
+        if (currentGuide?.guideUrl) {
+            dispatch({ type: ActionType.UPDATE_LOADING, payload: true });
+            getGuideHtml(
+                currentGuide.guideUrl,
+                serverApi,
+                (result: string, toc: Array<TableOfContentEntry>) => {
+                    dispatch({
+                        type: ActionType.UPDATE_GUIDE,
+                        payload: {
+                            guideHtml: result,
+                            guideUrl: currentGuide?.guideUrl,
+                            guideToc: toc,
+                        },
+                    });
+                }
+            );
+        }
     };
 
     const backToGames = () => {
@@ -42,8 +63,9 @@ export const Nav = ({ serverApi }: DefaultProps) => {
     };
 
     const btnStyle = {
-        maxWidth: '32%',
+        maxWidth: '30%',
         flexGrow: 1,
+        minWidth: 0,
     };
     return useMemo(
         () =>
@@ -69,6 +91,21 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                                 onClick={backToGames}
                             >
                                 <FaHome
+                                    style={{
+                                        margin: '0 auto',
+                                        display: 'block',
+                                    }}
+                                />
+                            </DialogButton>
+                        )}
+                        {pluginState === 'guide' && (
+                            <DialogButton
+                                //@ts-ignore
+                                disableNavSounds={true}
+                                style={btnStyle}
+                                onClick={reload}
+                            >
+                                <FiRotateCw
                                     style={{
                                         margin: '0 auto',
                                         display: 'block',
@@ -131,7 +168,9 @@ export const Nav = ({ serverApi }: DefaultProps) => {
                     <DialogButton
                         //@ts-ignore
                         disableNavSounds={true}
-                        style={{ ...btnStyle, marginBottom: '10px' }}
+                        style={{
+                            marginBottom: '10px',
+                        }}
                         onClick={() => {
                             showModal(
                                 <SearchModal

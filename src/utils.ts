@@ -101,6 +101,8 @@ export const getGuideHtml = async (
     serverApi: ServerAPI,
     handleResult: Function
 ) => {
+    url = encodeURI(url);
+    console.log(url);
     const test = SteamClient.BrowserView.Create();
     let htmlResult = '';
     let toc = '';

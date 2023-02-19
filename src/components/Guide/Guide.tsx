@@ -42,6 +42,13 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         replace: (domNode) => {
             if (
                 domNode instanceof Element &&
+                domNode.attribs &&
+                domNode.attribs.style
+            ) {
+                delete domNode.attribs.style;
+            }
+            if (
+                domNode instanceof Element &&
                 domNode.name === 'a' &&
                 domNode.attribs &&
                 domNode.attribs.href
