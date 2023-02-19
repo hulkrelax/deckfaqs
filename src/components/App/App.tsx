@@ -96,12 +96,12 @@ export const App = ({ serverApi }: DefaultProps) => {
             });
 
             // Non-Steam Games
-            const shortcuts = await SteamClient.Apps.GetAllShortcuts();
-            shortcuts.forEach(({ data: { strSortAs, strAppName } }) => {
-                if (!ignoreNonSteam.includes(strAppName)) {
-                    if (!runningGame && currentRunningGame == strAppName)
+            const shortcuts = collectionStore.deckDesktopApps.allApps;
+            shortcuts.forEach(({ sort_as, display_name } ) => {
+                if (!ignoreNonSteam.includes(display_name)) {
+                    if (!runningGame && currentRunningGame == display_name)
                         runningGame = currentRunningGame;
-                    games.push({ sortAsName: strSortAs, appName: strAppName });
+                    games.push({ sortAsName: sort_as, appName: display_name });
                 }
             });
             const apps = games.map((o) => o.appName);

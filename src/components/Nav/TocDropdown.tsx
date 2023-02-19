@@ -24,6 +24,7 @@ export const TocDropdown = ({ serverApi, style }: TocDropdownProps) => {
                 payload: { ...currentGuide, anchor, currentTocSection: path },
             });
         } else {
+            dispatch({ type: ActionType.UPDATE_LOADING, payload: true });
             getGuideHtml(href, serverApi, (result: string) => {
                 if (path.indexOf('#') > 0) {
                     anchor = path.substring(path.indexOf('#') + 1);

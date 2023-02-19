@@ -131,3 +131,13 @@ type InstallFolder = {
     bIsFixed: boolean;
     vecApps: App[];
 };
+
+type NonSteamGame = {
+    appid: number;
+    sort_as: string;
+    display_name: string;
+}
+
+declare namespace collectionStore {
+    const deckDesktopApps: {allApps: NonSteamGame[]};
+}
