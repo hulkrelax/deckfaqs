@@ -9,7 +9,7 @@ specifiers:
   '@types/dompurify': ^2.4.0
   '@types/react': ^17.0.53
   '@types/react-dom': ^18.0.11
-  decky-frontend-lib: ^3.18.11
+  decky-frontend-lib: ^3.19.1
   dompurify: ^2.4.4
   html-react-parser: ^3.0.9
   prettier: 2.7.1
@@ -22,7 +22,7 @@ specifiers:
   typescript: ^4.9.5
 
 dependencies:
-  decky-frontend-lib: 3.18.11
+  decky-frontend-lib: 3.19.1
   dompurify: 2.4.4
   html-react-parser: 3.0.9_react@18.2.0
   react: 18.2.0
@@ -140,8 +140,8 @@ packages:
     resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
     dev: true
 
-  /@types/node/18.14.0:
-    resolution: {integrity: sha512-5EWrvLmglK+imbCJY0+INViFWUHg1AHel1sq4ZVSfdcNqGy9Edv3UB9IIzzg+xPaUcAgZYcfVs2fBcwDeZzU0A==}
+  /@types/node/18.14.1:
+    resolution: {integrity: sha512-QH+37Qds3E0eDlReeboBxfHbX9omAcBCXEzswCu6jySP642jiM3cYSIkU/REqwhCUqXdonHFuBfJDiAJxMNhaQ==}
     dev: true
 
   /@types/prop-types/15.7.5:
@@ -165,7 +165,7 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.14.0
+      '@types/node': 18.14.1
     dev: true
 
   /@types/scheduler/0.16.2:
@@ -204,8 +204,8 @@ packages:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
     dev: true
 
-  /decky-frontend-lib/3.18.11:
-    resolution: {integrity: sha512-SLb3qWJc6CLNRqcbNyJsA8D6sXf7aix8/h6VqQTWjVmel6c3SkOR6b9KMvgFRzXumfRt7XGasBnZJmyCwH4BCQ==}
+  /decky-frontend-lib/3.19.1:
+    resolution: {integrity: sha512-hU4+EFs74MGzUCv8l1AO2+EBj9RRbnpU19Crm4u+3lbLu6d63U2GsUeQ9ssmNRcOMY1OuVZkRoZBE58soOBJ3A==}
     dev: false
 
   /deepmerge/4.3.0:
