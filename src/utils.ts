@@ -62,12 +62,12 @@ const MAX_POLLING = 100;
 export const getContent = async (
     url: string,
     serverApi: ServerAPI,
+    browserView: any,
     code: string,
     handleResult: Function
 ) => {
-    const test = SteamClient.BrowserView.Create();
     let htmlResult = '';
-    test.LoadURL(url);
+    browserView.LoadURL(url);
     let maxPolling = 0;
     while (maxPolling < MAX_POLLING) {
         maxPolling++;
@@ -92,21 +92,20 @@ export const getContent = async (
         if (htmlResult) break;
         await delay(100);
     }
-    SteamClient.BrowserView.Destroy(test);
+    browserView.LoadURL('data:text/html,<body><%2Fbody>');
     handleResult(htmlResult);
 };
 
 export const getGuideHtml = async (
     url: string,
     serverApi: ServerAPI,
+    browserView: any,
     handleResult: Function
 ) => {
     url = encodeURI(url);
-    console.log(url);
-    const test = SteamClient.BrowserView.Create();
     let htmlResult = '';
     let toc = '';
-    test.LoadURL(url);
+    browserView.LoadURL(url);
     let maxPolling = 0;
     while (maxPolling < MAX_POLLING) {
         maxPolling++;
@@ -135,13 +134,14 @@ export const getGuideHtml = async (
         if (htmlResult) break;
         await delay(100);
     }
-    SteamClient.BrowserView.Destroy(test);
+    browserView.LoadURL('data:text/html,<body><%2Fbody>');
     handleResult(htmlResult, toc);
 };
 
 export const gameSearch = async (
     game: string,
     serverApi: ServerAPI,
+    browserView: any,
     dispatch: React.Dispatch<AppActions>
 ) => {
     game = game.replace(' ', '+');
@@ -154,9 +154,13 @@ export const gameSearch = async (
     getContent(
         searchUrl,
         serverApi,
+        browserView,
         `function get_games() {
-        return document.documentElement.innerText;
-    }
+            if(document.documentElement) {
+                return document.documentElement.innerText;
+            }
+            return '';
+        }
     get_games()`,
         (result: string) => {
             let searchResults: ListItem[] = [];

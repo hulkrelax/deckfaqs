@@ -10,11 +10,12 @@ export type SearchResult = {
 };
 
 export const GameList = ({ serverApi }: DefaultProps) => {
+    const { state, dispatch, browserView } = useContext(AppContext);
+
     const search = (game: string) => {
-        gameSearch(game, serverApi, dispatch);
+        gameSearch(game, serverApi, browserView, dispatch);
     };
 
-    const { state, dispatch } = useContext(AppContext);
     const { runningGame, games } = state;
     return useMemo(
         () => (

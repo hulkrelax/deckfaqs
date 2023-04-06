@@ -8,6 +8,7 @@ export const GuideList = ({ serverApi }: DefaultProps) => {
     const {
         state: { guides },
         dispatch,
+        browserView,
     } = useContext(AppContext);
 
     const openGuide = (url: string) => {
@@ -18,6 +19,7 @@ export const GuideList = ({ serverApi }: DefaultProps) => {
         getGuideHtml(
             url,
             serverApi,
+            browserView,
             (result: string, toc: Array<TableOfContentEntry>) => {
                 dispatch({
                     type: ActionType.UPDATE_GUIDE,

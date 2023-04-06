@@ -12,6 +12,7 @@ export const TocDropdown = ({ serverApi, style }: TocDropdownProps) => {
     const {
         state: { currentGuide },
         dispatch,
+        browserView,
     } = useContext(AppContext);
     const handleTOCChange = (data: any) => {
         const path: string = data.data;
@@ -25,7 +26,7 @@ export const TocDropdown = ({ serverApi, style }: TocDropdownProps) => {
             });
         } else {
             dispatch({ type: ActionType.UPDATE_LOADING, payload: true });
-            getGuideHtml(href, serverApi, (result: string) => {
+            getGuideHtml(href, serverApi, browserView, (result: string) => {
                 if (path.indexOf('#') > 0) {
                     anchor = path.substring(path.indexOf('#') + 1);
                 }

@@ -26,11 +26,8 @@ export const SearchModal = ({
         textField.current?.element?.click();
     }, []);
     return (
-        <ModalRoot
-            closeModal={handleSubmit}
-            onEscKeypress={handleSubmit}
-        >
-            <form onSubmit={handleSubmit}>
+        <ModalRoot closeModal={handleSubmit}>
+            <form>
                 <TextField
                     //@ts-ignore
                     ref={textField}

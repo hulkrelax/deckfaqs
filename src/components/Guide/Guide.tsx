@@ -29,7 +29,7 @@ type GuideProps = DefaultProps & {
 };
 
 export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
-    const { state, dispatch } = useContext(AppContext);
+    const { state, dispatch, browserView } = useContext(AppContext);
     const { currentGuide, search, isLoading } = state;
     const guideDiv = useRef<HTMLDivElement>(null);
     const stateRef = useRef(state);
@@ -84,6 +84,7 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                                 getGuideHtml(
                                     `${baseUrl}/${anchor}`,
                                     serverApi,
+                                    browserView,
                                     (result: string) => {
                                         if (anchor.indexOf('#') > 0) {
                                             anchor = anchor.substring(
@@ -155,6 +156,7 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
                 getGuideHtml(
                     `${baseUrl}/#${anchor}`,
                     serverApi,
+                    browserView,
                     (result: string) => {
                         dispatch({
                             type: ActionType.UPDATE_GUIDE,
@@ -217,7 +219,10 @@ export const Guide = ({ serverApi, fullscreen }: GuideProps) => {
         if (!fullscreen) {
             serverApi.routerHook.addRoute('/deckfaqs-fullscreen', () => {
                 return (
-                    <AppContextProvider incomingState={stateRef.current}>
+                    <AppContextProvider
+                        incomingState={stateRef.current}
+                        browserView={browserView}
+                    >
                         <FullScreenGuide
                             serverApi={serverApi}
                             onDismiss={handleDismiss}

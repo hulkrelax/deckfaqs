@@ -39,11 +39,13 @@ export type TAppState = {
     isLoading: boolean;
     currentGuide?: GuideContents;
     search: GuideSearch;
+    browserView: any;
 };
 
 type TAppContext = {
     state: TAppState;
     dispatch: React.Dispatch<AppActions>;
+    browserView: any;
 };
 
 export const initialState: TAppState = {
@@ -56,27 +58,31 @@ export const initialState: TAppState = {
     darkMode: false,
     isLoading: false,
     search: initSearchState,
+    browserView: undefined,
 };
 
 export const AppContext = createContext<TAppContext>({
     state: initialState,
     dispatch: () => {},
+    browserView: undefined,
 });
 
 type AppContextProps = {
     incomingState?: TAppState;
+    browserView: any;
 };
 
 // This might be kind of overkill but figured why not try non-Redux state management
 export const AppContextProvider: React.FC<AppContextProps> = ({
     children,
     incomingState,
+    browserView,
 }) => {
     const myState = {
         ...initialState,
         ...incomingState,
     };
     const [state, dispatch] = useReducer(appReducer, myState);
-    const value = { state, dispatch };
+    const value = { state, browserView, dispatch };
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };

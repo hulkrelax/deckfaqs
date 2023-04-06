@@ -1,36 +1,3 @@
-// Non-exhaustive definition of the SteamClient that is available in the SP tab
-// This object has a lot more properties/methods than are listed here
-declare namespace SteamClient {
-    const Apps: {
-        GetAllShortcuts(): Promise<Shortcut[]>;
-        RegisterForGameActionStart(
-            callback: (
-                actionType: number,
-                strAppId: string,
-                actionName: string
-            ) => any
-        ): RegisteredEvent;
-    };
-    const InstallFolder: {
-        GetInstallFolders(): Promise<InstallFolder[]>;
-    };
-    const GameSessions: {
-        RegisterForAppLifetimeNotifications(
-            callback: (appState: AppState) => any
-        ): RegisteredEvent;
-    };
-    const BrowserView: {
-        Create(): any;
-        CreatePopup(): any;
-        Destroy(e: any): void;
-    };
-
-    const Storage: {
-        GetJSON(key: string): Promise<string>;
-        SetObject(key: string, value: {}): Promise<void>;
-    };
-}
-
 declare const enum DisplayStatus {
     Invalid = 0,
     Launching = 1,

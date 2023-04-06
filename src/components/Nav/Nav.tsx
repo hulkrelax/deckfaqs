@@ -22,6 +22,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
     const {
         state: { pluginState, currentGuide, darkMode },
         dispatch,
+        browserView,
     } = useContext(AppContext);
 
     const back = () => {
@@ -34,6 +35,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
             getGuideHtml(
                 currentGuide.guideUrl,
                 serverApi,
+                browserView,
                 (result: string, toc: Array<TableOfContentEntry>) => {
                     dispatch({
                         type: ActionType.UPDATE_GUIDE,
@@ -58,7 +60,7 @@ export const Nav = ({ serverApi }: DefaultProps) => {
 
     const handleSearch = (result: string) => {
         result = result.trim();
-        result && gameSearch(result, serverApi, dispatch);
+        result && gameSearch(result, serverApi, browserView, dispatch);
         Navigation.OpenQuickAccessMenu(QuickAccessTab.Decky);
     };
 

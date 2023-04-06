@@ -79,7 +79,7 @@ export const App = ({ serverApi }: DefaultProps) => {
             const games: { appName: string; sortAsName: string }[] = [];
             const currentRunningGame = Router.MainRunningApp?.display_name;
             let runningGame: string | undefined = undefined;
-            installFolders.forEach((folder) => {
+            installFolders.forEach((folder:InstallFolder) => {
                 folder.vecApps.forEach((app) => {
                     if (!ignoreSteam.includes(app.nAppID)) {
                         if (
@@ -126,7 +126,7 @@ export const App = ({ serverApi }: DefaultProps) => {
         });
 
         SteamClient.Storage.GetJSON(SETTINGS)
-            .then((result) => {
+            .then((result:string) => {
                 const settings: { darkMode: boolean } = JSON.parse(result);
                 dispatch({
                     type: ActionType.UPDATE_DARK_MODE,
