@@ -1,4 +1,4 @@
-## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.7.1)
+## DeckFAQs, a GameFAQs browser for the Steam Deck (v1.8.0)
 
--   Fixes most issues that I've seen that was causing crashes
--   bump DFL
+-   Addresses issues with DeckFAQs breaking Steam Client on volume button press
+-   Bump DFL
